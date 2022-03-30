@@ -65,6 +65,6 @@ public class InstancesController {
 		System.err.println("update InstanceBoundary:\ndomain: " +instanceBoundary.getInstanceId().getDomain()+
 				"\nId:" +instanceBoundary.getInstanceId().getId() );
 	}
-	
+	 
 
 }
