@@ -1,9 +1,13 @@
-package rest_API;
+package boundries;
 
 
 public class UserID {
 	private String domain;
 	private String email;
+	
+	public UserID(){
+		
+	}
 	
 	public UserID(String domain, String email) {
 		super();

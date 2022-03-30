@@ -1,4 +1,4 @@
-package rest_API;
+package boundries;
 
 public class ActivityId {
 	private String domain;

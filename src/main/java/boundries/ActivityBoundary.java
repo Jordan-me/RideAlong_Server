@@ -1,4 +1,4 @@
-package rest_API;
+package boundries;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -8,9 +8,9 @@ import java.util.Map;
 public class ActivityBoundary {
 	private ActivityId activityId;
 	private String type;
-	private Instance instance;
+	private InstanceId instance;
 	private Date createdTimestamp;
-	private InvokedBy invokedBy;
+	private UserID invokedBy;
 	private Map<String, Object> activityAttributes;
 	
 	public ActivityBoundary() {
@@ -20,9 +20,9 @@ public class ActivityBoundary {
 	public ActivityBoundary(
 			ActivityId activityId,
 			String type,
-			Instance instance,
+			InstanceId instance,
 			Date createdTimestamp,
-			InvokedBy invokedBy) 
+			UserID invokedBy) 
 	{
 		this.activityId = null;
 		this.type = type;
@@ -49,12 +49,12 @@ public class ActivityBoundary {
 	}
 
 
-	public Instance getInstance() {
+	public InstanceId getInstance() {
 		return instance;
 	}
 
 
-	public void setInstance(Instance instance) {
+	public void setInstance(InstanceId instance) {
 		this.instance = instance;
 	}
 
@@ -68,12 +68,12 @@ public class ActivityBoundary {
 	}
 
 
-	public InvokedBy getInvokedBy() {
+	public UserID getInvokedBy() {
 		return invokedBy;
 	}
 
 
-	public void setInvokedBy(InvokedBy invokedBy) {
+	public void setInvokedBy(UserID invokedBy) {
 		this.invokedBy = invokedBy;
 	}
 
