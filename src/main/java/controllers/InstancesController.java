@@ -7,14 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import demo.Message;
 
-@RestController
+
 public class InstancesController {
-	@RequestMapping(
-			path = "/hello",
-			method = RequestMethod.GET,
-			produces = MediaType.APPLICATION_JSON_VALUE)
-		public Message hello () {
-			return new Message("Hello World!");
-		}
 
 }
