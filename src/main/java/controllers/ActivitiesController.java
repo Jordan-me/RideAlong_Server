@@ -26,7 +26,7 @@ public class ActivitiesController {
 		boundary.setCreatedTimestamp(new Date());
 		boundary.setInvokedBy(new UserID("2022b.yarden.dahan","abc@gmail.com"));
 		boundary.setActivityAttributes("event", "Flight From TLV");
-
+		
 		return boundary;
 	}
 }
