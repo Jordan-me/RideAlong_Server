@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import boundries.NewUserBoundary;
 import boundries.UserBoundary;
 import boundries.UserID;
-import demo.Message;
 
+
+@RestController
 public class UserController {
 	// Create a new user
 	@RequestMapping(
@@ -21,11 +22,11 @@ public class UserController {
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary createNewUser(
 			@RequestBody NewUserBoundary input) {
-		
-		input.setEmail("user@demo.com");
-		input.setUsername("MANAGER");
-		input.setRole("Demo User");
-		input.setAvatar("J");
+// 		Test
+//		input.setEmail("user@demo.com");
+//		input.setUsername("MANAGER");
+//		input.setRole("Demo User");
+//		input.setAvatar("J");
 		UserID userId = new UserID("2022b.yarden.dahan",input.getEmail());
 		
 		return new UserBoundary(userId, input.getRole(),input.getUsername(),input.getAvatar());				
@@ -53,8 +54,10 @@ public class UserController {
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void updateUser(@PathVariable("userDomain") String domain,
 						   @PathVariable("userEmail") String email,
-						   UserBoundary input) {   
+						   @RequestBody UserBoundary input) {   
 		input.getUserId().setDomain(domain);
 		input.getUserId().setEmail(email);
+		System.err.println("update userBoundary:\nemail: " + input.getUserId().getEmail()+
+				"\nDomain:" +input.getUserId().getDomain() );
 	}
 }
