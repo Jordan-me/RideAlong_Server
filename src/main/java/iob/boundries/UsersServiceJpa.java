@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import iob.logic.UsersCrud;
 import iob.logic.UsersService;
 
 public class UsersServiceJpa implements UsersService{
-
+	private UsersCrud usersCrud;
+	private MessageConverter messageConverter;
 	@Override
 	public UserBoundary createUser(UserBoundary user) {
 		// TODO Auto-generated method stub

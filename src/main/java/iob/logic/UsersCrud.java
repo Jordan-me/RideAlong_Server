@@ -6,6 +6,6 @@ import iob.data.UserEntity;
 
  
 
-public interface UserCrud extends CrudRepository<UserEntity, String>{ 
+public interface UsersCrud extends CrudRepository<UserEntity, String>{ 
 	
 }

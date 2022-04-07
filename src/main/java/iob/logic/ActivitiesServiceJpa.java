@@ -1,4 +1,4 @@
-package iob.boundries;
+package iob.logic;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import iob.logic.ActivitiesService;
+import iob.boundries.ActivityBoundary;
 @Service
 public class ActivitiesServiceJpa  implements ActivitiesService {
 
