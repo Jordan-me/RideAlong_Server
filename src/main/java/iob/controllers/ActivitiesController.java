@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import iob.boundries.*;
+import iob.logic.ActivitiesService;
 
 @RestController
 public class ActivitiesController {
+	private ActivitiesService activitiesService;
 	@RequestMapping(
 			path = "/iob/activities",
 			method = RequestMethod.POST,

@@ -17,9 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import iob.boundries.*;
+import iob.logic.ActivitiesService;
+import iob.logic.InstancesService;
 
 @RestController
 public class InstancesController {
+	private InstancesService instancesService;
+
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path ="/iob/instances",

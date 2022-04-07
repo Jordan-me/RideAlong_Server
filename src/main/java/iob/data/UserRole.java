@@ -1,5 +1,8 @@
 package iob.data;
 
-public enum UserRole {
+import iob.boundries.UserID;
 
+
+public enum UserRole {
+	PLAYER, MANAGER, ADMIN;
 }

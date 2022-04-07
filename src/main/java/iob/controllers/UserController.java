@@ -8,11 +8,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import iob.boundries.*;
+import iob.logic.ActivitiesService;
+import iob.logic.UsersService;
 
 
 
 @RestController
 public class UserController {
+	private UsersService userService;
+
 	// Create a new user
 	@RequestMapping(
 			path = "/iob/users",
