@@ -1,5 +1,6 @@
 package iob.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import iob.boundries.*;
 import iob.logic.ActivitiesService;
+import iob.logic.InstancesService;
 import iob.logic.UsersService;
 
 
@@ -16,7 +18,11 @@ import iob.logic.UsersService;
 @RestController
 public class UserController {
 	private UsersService userService;
-
+	 
+	@Autowired
+	public UserController(UsersService userService) {
+		this.userService = userService;
+	}
 	// Create a new user
 	@RequestMapping(
 			path = "/iob/users",

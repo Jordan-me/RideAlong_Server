@@ -6,16 +6,25 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import iob.boundries.*;
+import iob.logic.ActivitiesService;
+import iob.logic.UsersService;
 
 
 @RestController
 public class AdminController {
+	private UsersService admin;
+	@Autowired
+	public AdminController(UsersService admin) {
+		this.admin = admin;
+	}
+		
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path ="/iob/admin/users",
