@@ -1,5 +1,4 @@
 package iob.logic;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,36 +6,37 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import iob.boundries.InstanceBoundary;
+import iob.boundries.UserBoundary;
 
-public class InstancesServiceJpa  implements InstancesService {
 
+public class UsersServiceMockUp implements UsersService{
+//	private MessageConverter messageConverter;
 	@Override
-	public InstanceBoundary createInstance(InstanceBoundary instance) {
+	public UserBoundary createUser(UserBoundary user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public InstanceBoundary updateInstance(String instanceDomain, String instanceId, InstanceBoundary update) {
+	public UserBoundary login(String userDomain, String userEmail) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public InstanceBoundary getSpecificInstance(String instanceDomain, String instanceId) {
+	public UserBoundary updateUser(String userDomain, String userEmail, UserBoundary update) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<InstanceBoundary> getAllInstances() {
+	public List<UserBoundary> getAllUsers() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void deleteAllInstances() {
+	public void deleteAllUsers() {
 		// TODO Auto-generated method stub
 		
 	}

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import iob.boundries.ActivityBoundary;
 @Service
-public class ActivitiesServiceJpa  implements ActivitiesService {
+public class ActivitiesServiceMockUp  implements ActivitiesService {
 
 	@Override
 	public Object invokeActivity(ActivityBoundary activity) {
