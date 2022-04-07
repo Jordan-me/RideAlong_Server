@@ -37,7 +37,7 @@ public class InstancesController {
 				boundary.setName("myName"+random.nextInt(1001));
 				boundary.setActive(random.nextBoolean());
 				boundary.setCreatedTimestamp(new Date());
-				boundary.setCreatedBy(new UserID("2022b.yarden.dahan","abc"+random.nextInt(21)+"@gmail.com"));
+				boundary.setCreatedBy(new CreatedBy(new UserID("2022b.yarden.dahan","abc"+random.nextInt(21)+"@gmail.com")));
 				boundary.setLocation(new Location(random.nextDouble()*10+36,random.nextDouble()*10+36));
 				
 				Map<String, Object> attributes = new HashMap<>();
@@ -83,7 +83,7 @@ public class InstancesController {
 		instance.setName("myName"+random.nextInt(1001));
 		instance.setActive(random.nextBoolean());
 		instance.setCreatedTimestamp(new Date());
-		instance.setCreatedBy(new UserID("2022b.yarden.dahan","abc"+random.nextInt(21)+"@gmail.com"));
+		instance.setCreatedBy(new CreatedBy(new UserID("2022b.yarden.dahan","abc"+random.nextInt(21)+"@gmail.com")));
 		instance.setLocation(new Location(random.nextDouble()*10+36,random.nextDouble()*10+36));
 		
 		Map<String, Object> attributes = new HashMap<>();

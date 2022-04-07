@@ -56,7 +56,7 @@ public class AdminController {
 				boundary.setType("testing 1,2,3");
 				boundary.setInstance(new InstanceId("2022b.yarden.dahan",UUID.randomUUID().toString()));
 				boundary.setCreatedTimestamp(new Date());
-				boundary.setInvokedBy(new UserID("2022b.yarden.dahan","abc"+random.nextInt(21)+"@gmail.com"));
+				boundary.setCreatedBy(new CreatedBy(new UserID("2022b.yarden.dahan","abc"+random.nextInt(21)+"@gmail.com")));
 				boundary.setActivityAttributes("event", "event"+random.nextInt(1001));
 
 				return boundary;

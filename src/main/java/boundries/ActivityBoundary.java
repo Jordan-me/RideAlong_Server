@@ -10,7 +10,7 @@ public class ActivityBoundary {
 	private String type;
 	private InstanceId instance;
 	private Date createdTimestamp;
-	private UserID invokedBy;
+	private CreatedBy createdBy;
 	private Map<String, Object> activityAttributes;
 	
 	public ActivityBoundary() {
@@ -22,13 +22,13 @@ public class ActivityBoundary {
 			String type,
 			InstanceId instance,
 			Date createdTimestamp,
-			UserID invokedBy) 
+			CreatedBy createdBy) 
 	{
 		this.activityId = null;
 		this.type = type;
 		this.instance = instance;
 		this.createdTimestamp = createdTimestamp;
-		this.invokedBy = invokedBy;
+		this.createdBy = createdBy;
 		this.activityAttributes = new HashMap<String, Object>();
 	}
 
@@ -68,13 +68,13 @@ public class ActivityBoundary {
 	}
 
 
-	public UserID getInvokedBy() {
-		return invokedBy;
+	public CreatedBy getCreatedBy() {
+		return createdBy;
 	}
 
 
-	public void setInvokedBy(UserID invokedBy) {
-		this.invokedBy = invokedBy;
+	public void setCreatedBy(CreatedBy createdBy) {
+		this.createdBy = createdBy;
 	}
 
 

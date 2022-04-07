@@ -24,7 +24,7 @@ public class ActivitiesController {
 		boundary.setType("testing 1,2");
 		boundary.setInstance(new InstanceId("2022b.yarden.dahan",UUID.randomUUID().toString()));
 		boundary.setCreatedTimestamp(new Date());
-		boundary.setInvokedBy(new UserID("2022b.yarden.dahan","abc@gmail.com"));
+		boundary.setCreatedBy(new CreatedBy(new UserID("2022b.yarden.dahan","abc@gmail.com")));
 		boundary.setActivityAttributes("event", "Flight From TLV");
 		
 		return boundary;
