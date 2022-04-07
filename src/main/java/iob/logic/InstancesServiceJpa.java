@@ -1,4 +1,4 @@
-package iob.boundries;
+package iob.logic;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import iob.logic.InstancesService;
+import iob.boundries.InstanceBoundary;
 
 public class InstancesServiceJpa  implements InstancesService {
 
