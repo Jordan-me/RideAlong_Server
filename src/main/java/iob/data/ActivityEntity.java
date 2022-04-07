@@ -18,6 +18,8 @@ VARCHAR(255)	| VARCHAR(255)	|	VARCHAR(255) |VARCHAR(255)       |???		 | ???
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import iob.logic.IobMapConverter;
+
 @Entity
 @Table(name="ACTIVITY_TABLE")
 public class ActivityEntity {
@@ -74,7 +76,7 @@ public class ActivityEntity {
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
-//	@Convert(converter = MapToJsonConverter.class)
+	@Convert(converter = IobMapConverter.class)
 	@Column(name="ACTIVITY_ATTRIBUTES")
 	public Map<String, Object> getActivityAttributes() {
 		return activityAttributes;
