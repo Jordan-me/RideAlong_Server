@@ -4,13 +4,25 @@ import java.util.Date;
 import java.util.Map;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
+import iob.boundries.Location;
 
+/*
+INSTANCE_TABLE
+------------------------------
+instanceId		| TYPE	  		| NAME 			 | ACTIVE 			| CREATED_TIME_STAMP | LOCATION | CREATED_BY |INSTANCE_ATTRIBUTES
+VARCHAR(255)	| VARCHAR(255)	|	VARCHAR(255) |VARCHAR(255)		|VARCHAR(255)        |???		|???		 | ???
+<PK>
+*/
 @Entity
-@Table(name="INSTANCE_ENTITY_TABLE")
+@Table(name="INSTANCE_TABLE")
 public class InstanceEntity {
 	private String instanceId;
 	private String type;
@@ -18,12 +30,11 @@ public class InstanceEntity {
 	private Boolean active;
 	private Date createdTimestamp;
 	private String createdBy;
-//	private Location location;
-//	private Map<String, Object> instanceAttributes;
+	private Location location;
+	private Map<String, Object> instanceAttributes;
 	
 	public InstanceEntity() {
 	}
-	
 	
 	@Id
 	public String getInstanceId() {
@@ -34,7 +45,7 @@ public class InstanceEntity {
 		this.instanceId = instanceId;
 	}
 	
-	
+	@Column(name = "TYPE")
 	public String getType() {
 		return type;
 	}
@@ -43,7 +54,7 @@ public class InstanceEntity {
 		this.type = type;
 	}
 	
-	
+	@Column(name = "NAME")
 	public String getName() {
 		return name;
 	}
@@ -53,15 +64,16 @@ public class InstanceEntity {
 	}
 	
 	
+	@Column(name = "ACTIVE")
 	public Boolean getActive() {
 		return active;
 	}
-	
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
 	
-	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="CREATED_TIME_STAMP")
 	public Date getCreatedTimestamp() {
 		return createdTimestamp;
 	}
@@ -69,8 +81,21 @@ public class InstanceEntity {
 	public void setCreatedTimestamp(Date createdTimestamp) {
 		this.createdTimestamp = createdTimestamp;
 	}
+//	@Convert(converter = LocationConverter.class)
+	@Lob
+	@Column(name="LOCATION")
+	public Location getLocation() {
+		return location;
+	}
 	
 	
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+	
+//	@Convert(converter = CreatedByConverter.class)
+	@Lob
+	@Column(name="CREATED_BY")
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -79,5 +104,17 @@ public class InstanceEntity {
 		this.createdBy = createdBy;
 	}
 	
+//	@Convert(converter = MapToJsonConverter.class)
+	@Lob
+	@Column(name="INSTANCE_ATTRIBUTES")
+	public Map<String, Object> getInstanceAttributes() {
+		return instanceAttributes;
+	}
+
+
+	public void setInstanceAttributes(Map<String, Object> instanceAttributes) {
+		this.instanceAttributes = instanceAttributes;
+	}
+
 	
 }

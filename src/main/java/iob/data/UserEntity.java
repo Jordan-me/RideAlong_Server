@@ -1,5 +1,7 @@
 package iob.data;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -19,7 +21,7 @@ VARCHAR(255)| VARCHAR(255)|	VARCHAR(255)	 |VARCHAR(255)			|VARCHAR(255)
 @Table(name="USER_TABLE")
 public class UserEntity {
 	private String userId;
-	private String role;
+	private UserRole role;
 	private String username;
 	private String avatar;
 	
@@ -34,11 +36,12 @@ public class UserEntity {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public String getRole() {
+	@Enumerated(EnumType.STRING)
+	public UserRole getRole() {
 		return role;
 	}
 
-	public void setRole(String role) {
+	public void setRole(UserRole role) {
 		this.role = role;
 	}
 
