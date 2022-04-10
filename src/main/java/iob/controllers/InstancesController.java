@@ -24,12 +24,7 @@ import iob.logic.UsersService;
 
 @RestController
 public class InstancesController {
-	private InstancesService instancesService;
- 
-	@Autowired
-	public InstancesController(InstancesService instancesService) {
-		this.instancesService = instancesService;
-	}
+
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path ="/iob/instances",

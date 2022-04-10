@@ -15,13 +15,7 @@ import iob.logic.ActivitiesService;
 
 @RestController
 public class ActivitiesController {
-	private ActivitiesService activitiesService;
-	
-	@Autowired
-	public ActivitiesController(ActivitiesService activitiesService) {
-		this.activitiesService = activitiesService;
-	}
-		
+	// Invoke an instance activity
 	@RequestMapping(
 			path = "/iob/activities",
 			method = RequestMethod.POST,

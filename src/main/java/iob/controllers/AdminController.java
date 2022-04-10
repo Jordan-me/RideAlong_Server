@@ -20,11 +20,11 @@ import iob.logic.UsersService;
 @RestController
 public class AdminController {
 	private UsersService admin;
+	
 	@Autowired
 	public AdminController(UsersService admin) {
 		this.admin = admin;
 	}
-		
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path ="/iob/admin/users",

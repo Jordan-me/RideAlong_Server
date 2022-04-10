@@ -17,12 +17,13 @@ import iob.logic.UsersService;
 
 @RestController
 public class UserController {
-	private UsersService userService;
-	 
+	private UsersService user;
+	
 	@Autowired
-	public UserController(UsersService userService) {
-		this.userService = userService;
+	public UserController(UsersService user) {
+		this.user = user;
 	}
+	
 	// Create a new user
 	@RequestMapping(
 			path = "/iob/users",
