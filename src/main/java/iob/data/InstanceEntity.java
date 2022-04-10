@@ -13,9 +13,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import iob.boundries.Location;
-import iob.logic.IobCreatedByConverter;
-import iob.logic.IobLocationConverter;
-import iob.logic.IobMapConverter;
+
 
 /*
 INSTANCE_TABLE
@@ -84,7 +82,6 @@ public class InstanceEntity {
 	public void setCreatedTimestamp(Date createdTimestamp) {
 		this.createdTimestamp = createdTimestamp;
 	}
-	@Convert(converter = IobLocationConverter.class)
 	@Lob
 	@Column(name="LOCATION")
 	public Location getLocation() {
@@ -96,7 +93,6 @@ public class InstanceEntity {
 		this.location = location;
 	}
 	
-	@Convert(converter = IobCreatedByConverter.class)
 	@Lob
 	@Column(name="CREATED_BY")
 	public String getCreatedBy() {
@@ -107,7 +103,6 @@ public class InstanceEntity {
 		this.createdBy = createdBy;
 	}
 	
-	@Convert(converter = IobMapConverter.class)
 	@Lob
 	@Column(name="INSTANCE_ATTRIBUTES")
 	public Map<String, Object> getInstanceAttributes() {

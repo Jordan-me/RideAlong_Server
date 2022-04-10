@@ -1,6 +1,9 @@
 package iob.controllers;
 
+import java.util.regex.Pattern;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,12 +21,23 @@ import iob.logic.UsersService;
 @RestController
 public class UserController {
 	private UsersService user;
+	private String domainName;
 	
+	@Value("${spring.application.name}")
+	public void setDomainName(String domainName) {
+		this.domainName = domainName;
+	}
 	@Autowired
 	public UserController(UsersService user) {
 		this.user = user;
 	}
-	
+	//email validation (Example: username@domain.com)
+	public static boolean patternMatches(String emailAddress) {
+		String regexPattern = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+	    return Pattern.compile(regexPattern)
+	      .matcher(emailAddress)
+	      .matches();
+	}
 	// Create a new user
 	@RequestMapping(
 			path = "/iob/users",
@@ -32,14 +46,14 @@ public class UserController {
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary createNewUser(
 			@RequestBody NewUserBoundary input) {
-// 		Test
-//		input.setEmail("user@demo.com");
-//		input.setUsername("MANAGER");
-//		input.setRole("Demo User");
-//		input.setAvatar("J");
-		UserID userId = new UserID("2022b.yarden.dahan",input.getEmail());
 		
-		return new UserBoundary(userId, input.getRole(),input.getUsername(),input.getAvatar());				
+		// Email validation 
+		if(!patternMatches(input.getEmail()))
+			throw new RuntimeException("Email is not valid.");
+		else {
+			UserID userId = new UserID(this.domainName,input.getEmail());
+			return this.user.createUser(new UserBoundary(userId, input.getRole(),input.getUsername(),input.getAvatar()));	
+		}
 	}
 	
 	// Login valid user and retrieve user details
@@ -50,10 +64,11 @@ public class UserController {
 	public UserBoundary getUser(@PathVariable("userDomain") String domain,
 								@PathVariable("userEmail") String email) {
 		
-		UserID userId = new UserID(domain,email);
-		UserBoundary user = new UserBoundary(userId,"Traveller","Demo User","J");
-		
-		return user;				
+		UserBoundary userLoggedIn = this.user.login(domain, email);
+		if(userLoggedIn == null)
+			throw new RuntimeException("User was not found.");
+		else
+			return userLoggedIn;			
 	}
 	
 	
@@ -65,9 +80,7 @@ public class UserController {
 	public void updateUser(@PathVariable("userDomain") String domain,
 						   @PathVariable("userEmail") String email,
 						   @RequestBody UserBoundary input) {   
-		input.getUserId().setDomain(domain);
-		input.getUserId().setEmail(email);
-		System.err.println("update userBoundary:\nemail: " + input.getUserId().getEmail()+
-				"\nDomain:" +input.getUserId().getDomain() );
+ 
+		this.user.updateUser(domain, email, input);
 	}
 }
