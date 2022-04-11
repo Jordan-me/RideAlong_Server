@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -39,19 +40,23 @@ public class ActivitiesServiceMockUp  implements ActivitiesService {
 	}
 	@Override
 	public Object invokeActivity(ActivityBoundary activity) {
-		// TODO Auto-generated method stub
-		return null;
+		ActivityEntity entity = converter.toEntity(activity);
+		activityDataBaseMockup.put(activity.getActivityId().toString(), entity);
+		return entity.toString();
 	}
 
 	@Override
 	public List<ActivityBoundary> getAllActivities() {
-		// TODO Auto-generated method stub
-		return null;
+		List<ActivityBoundary> activtiesBoundary = activityDataBaseMockup.values().stream()
+                .map(v -> converter.toBoundary(v))
+                .collect(Collectors.toList());
+        
+		return activtiesBoundary;
 	}
 
 	@Override
 	public void deleteAllActivities() {
-		// TODO Auto-generated method stub
+		this.activityDataBaseMockup.clear();	
 		
 	}
 

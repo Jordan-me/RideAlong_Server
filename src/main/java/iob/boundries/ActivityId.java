@@ -28,6 +28,11 @@ public class ActivityId {
 	public void setId(String id) {
 		this.id = id;
 	}
+
+	@Override
+	public String toString() {
+		return domain + "_" + id ;
+	}
 	
 	
 	
