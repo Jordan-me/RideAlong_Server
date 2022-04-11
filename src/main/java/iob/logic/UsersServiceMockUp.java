@@ -59,7 +59,7 @@ public class UsersServiceMockUp implements UsersService{
 		// Return user data from DB_MockUp
 		UserEntity entity = this.userDataBaseMockup.get(userId);
 		if (entity == null)
-			throw new UserNotFoundException("User "+ userId + " could not found.");
+			throw new UserNotFoundException("User "+ userId.toString() + " could not found.");
 		
 		// Convert mockUp data to Boundary and return it
 		return this.converter.toBoundary(entity);

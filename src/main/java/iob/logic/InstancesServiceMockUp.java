@@ -19,7 +19,7 @@ import iob.data.InstanceEntity;
 import iob.data.UserEntity;
 @Service 
 public class InstancesServiceMockUp  implements InstancesService {
-	private Map<InstanceId,InstanceEntity> instanceDataBaseMockup;
+	private Map<String,InstanceEntity> instanceDataBaseMockup;
 	private InstancesConverter converter;
 	
 	@Autowired
@@ -46,7 +46,7 @@ public class InstancesServiceMockUp  implements InstancesService {
 		InstanceEntity entity = this.converter.toEntity(instance);
 		
 		// store entity to DB
-		this.instanceDataBaseMockup.put(instance.getInstanceId(), entity);
+		this.instanceDataBaseMockup.put(instance.getInstanceId().toString(), entity);
 		
 		// Convert UserEntity to UserBoundary
 		InstanceBoundary instanceBoundary = this.converter.toBoundary(entity);
@@ -54,20 +54,60 @@ public class InstancesServiceMockUp  implements InstancesService {
 	}
 
 	@Override
-	public InstanceBoundary updateInstance(String instanceDomain, String instanceId, InstanceBoundary update) {
-		// TODO Auto-generated method stub
-		return null;
+	public InstanceBoundary updateInstance(String instanceDomain, String instanceId, InstanceBoundary update) { 
+		// Return user data from DB_MockUp
+		InstanceEntity entity = this.converter.toEntity(this.getSpecificInstance(instanceDomain, instanceId));
+		
+		//update fields, if dirtyFlag- mean our instance changed
+		boolean dirtyFlag = false;
+		if (update.getActive() != null) {
+			dirtyFlag = true;
+			entity.setActive(update.getActive());			
+		}
+		if (update.getType() != null) {
+			dirtyFlag = true;
+			entity.setType(update.getType());			
+		}
+
+		if (update.getName() != null && !update.getName().isEmpty()) {
+			dirtyFlag = true;
+			entity.setName(update.getName());			
+		}
+		
+		if (update.getLocation() != null) {
+			dirtyFlag = true;
+			entity.setLocation(update.getLocation().toString());
+		}
+		// store entity to DB if needed
+		if (dirtyFlag)
+			//The put method either updates the value or adds a new entry.
+			this.instanceDataBaseMockup.put(entity.getInstanceId(), entity);
+
+		InstanceBoundary boundary = this.converter.toBoundary(entity);
+		return boundary;
 	}
 
 	@Override
 	public InstanceBoundary getSpecificInstance(String instanceDomain, String instanceId) {
 
-		return null;
+		InstanceId id = new InstanceId(instanceDomain, instanceId);
+		InstanceEntity entity = this.instanceDataBaseMockup.get(id.toString());
+		if(entity == null) {
+			throw new RuntimeException("Instance "+ id.toString() + " could not found.");
+		}
+		InstanceBoundary boundary = this.converter.toBoundary(entity);
+		return boundary;
 	}
 
 	@Override
 	public List<InstanceBoundary> getAllInstances() {
-		// TODO Auto-generated method stub
+		/*
+		 * stream over database (map) Entries
+		 * filter entires based on values (ActvityEntity) InvokedBy
+		 * map the new entries to ActivityBoundary
+		 * Collect the data into a list
+		 */
+		
 		return null;
 	}
 

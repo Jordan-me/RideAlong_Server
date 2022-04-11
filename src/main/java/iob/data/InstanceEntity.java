@@ -17,9 +17,9 @@ import iob.boundries.Location;
 
 /*
 INSTANCE_TABLE
-------------------------------
-instanceId		| TYPE	  		| NAME 			 | ACTIVE 			| CREATED_TIME_STAMP | LOCATION | CREATED_BY |INSTANCE_ATTRIBUTES
-VARCHAR(255)	| VARCHAR(255)	|	VARCHAR(255) |VARCHAR(255)		|VARCHAR(255)        |???		|???		 | ???
+------------------------------------------------------------------------------------------------------------------------------------------------------
+instanceId		| TYPE	  		| NAME 			 | ACTIVE 			| CREATED_TIME_STAMP | LOCATION	  | CREATED_BY |INSTANCE_ATTRIBUTES
+VARCHAR(255)	| VARCHAR(255)	|	VARCHAR(255) |VARCHAR(255)		|VARCHAR(255)        |VARCHAR(255)|VARCHAR(255)| ???
 <PK>
 */
 @Entity
@@ -28,10 +28,10 @@ public class InstanceEntity {
 	private String instanceId;
 	private String type;
 	private String name;
-	private Boolean active;
+	private boolean active;
 	private Date createdTimestamp;
 	private String createdBy;
-	private Location location;
+	private String location;
 	private Map<String, Object> instanceAttributes;
 	
 	public InstanceEntity() {
@@ -66,7 +66,7 @@ public class InstanceEntity {
 	
 	
 	@Column(name = "ACTIVE")
-	public Boolean getActive() {
+	public boolean getActive() {
 		return active;
 	}
 	public void setActive(Boolean active) {
@@ -84,12 +84,12 @@ public class InstanceEntity {
 	}
 	@Lob
 	@Column(name="LOCATION")
-	public Location getLocation() {
+	public String getLocation() {
 		return location;
 	}
 	
 	
-	public void setLocation(Location location) {
+	public void setLocation(String location) {
 		this.location = location;
 	}
 	
@@ -112,6 +112,13 @@ public class InstanceEntity {
 
 	public void setInstanceAttributes(Map<String, Object> instanceAttributes) {
 		this.instanceAttributes = instanceAttributes;
+	}
+
+	@Override
+	public String toString() {
+		return "InstanceEntity [instanceId=" + instanceId + ", type=" + type + ", name=" + name + ", active=" + active
+				+ ", createdTimestamp=" + createdTimestamp + ", createdBy=" + createdBy + ", location=" + location
+				+ ", instanceAttributes=" + instanceAttributes + "]";
 	}
 
 	

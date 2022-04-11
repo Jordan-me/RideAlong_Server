@@ -35,24 +35,25 @@ public class UsersConverter {
 
 		if (boundary.getAvatar() != null && !boundary.getAvatar().isEmpty()) {
 			entity.setAvatar(boundary.getAvatar());
+		}else {
+			entity.setAvatar("NONE");
 		}
 		if (boundary.getUsername() !=null && !boundary.getUsername().isEmpty()){
 			entity.setUsername(boundary.getUsername());
+		}else {
+			entity.setUsername("NONE");
 		}
  
 		return entity;
 	}
 
 	public UserRole toEntity (String boundaryRole) {
+		UserRole rv = UserRole.PLAYER;
 		if(boundaryRole != null) {
 			String strRole = boundaryRole.toUpperCase();
-			try {
-				UserRole rv = UserRole.valueOf(strRole);				
-			}catch(IllegalArgumentException e) {
-				throw new RuntimeException("User's role is not valid.");
-			}
+			rv = UserRole.valueOf(strRole);				
 		}
-		return null;
+		return rv;
 
 	}
 	
