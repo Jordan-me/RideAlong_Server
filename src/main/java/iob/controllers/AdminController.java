@@ -22,7 +22,7 @@ public class AdminController {
 	private UsersService admin;
 	
 	@Autowired
-	public AdminController(UsersService admin) {
+	public void setUsersService(UsersService admin) {
 		this.admin = admin;
 	}
 	@RequestMapping(

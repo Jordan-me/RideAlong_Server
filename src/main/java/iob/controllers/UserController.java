@@ -28,7 +28,7 @@ public class UserController {
 		this.domainName = domainName;
 	}
 	@Autowired
-	public UserController(UsersService user) {
+	public void setUsersService(UsersService user) {
 		this.user = user;
 	}
 	//email validation (Example: username@domain.com)
@@ -61,16 +61,12 @@ public class UserController {
 			path = "/iob/users/login/{userDomain}/{userEmail}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public UserBoundary getUser(@PathVariable("userDomain") String domain,
+	public UserBoundary login(@PathVariable("userDomain") String domain,
 								@PathVariable("userEmail") String email) {
 		
-		UserBoundary userLoggedIn = this.user.login(domain, email);
-		if(userLoggedIn == null)
-			throw new RuntimeException("User was not found.");
-		else
-			return userLoggedIn;			
+		UserBoundary userLogIn = this.user.login(domain, email);
+		return userLogIn;			
 	}
-	
 	
 	// Update user details
 	@RequestMapping(

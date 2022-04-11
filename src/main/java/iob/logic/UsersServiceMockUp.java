@@ -17,7 +17,7 @@ import iob.data.UserEntity;
 
 @Service
 public class UsersServiceMockUp implements UsersService{
-	private Map<UserID, UserEntity> userDataBaseMockup;
+	private Map<String, UserEntity> userDataBaseMockup;
 	private UsersConverter converter;
 
 	@Autowired
@@ -33,7 +33,7 @@ public class UsersServiceMockUp implements UsersService{
 	
 	@PostConstruct
 	public void init() {
-		// thread safe Map
+		// Initialize thread safe Map
 		this.userDataBaseMockup = Collections.synchronizedMap(new HashMap<>());
 	}
 	
@@ -44,7 +44,7 @@ public class UsersServiceMockUp implements UsersService{
 		UserEntity entity = this.converter.toEntity(user);
 		
 		// store entity to DB
-		this.userDataBaseMockup.put(user.getUserId(), entity);
+		this.userDataBaseMockup.put(user.getUserId().toString(), entity);
 		
 		// Convert UserEntity to UserBoundary
 		UserBoundary userBoundary = this.converter.toBoundary(entity);
@@ -57,7 +57,7 @@ public class UsersServiceMockUp implements UsersService{
 		UserID userId = new UserID(userDomain, userEmail);
 		
 		// Return user data from DB_MockUp
-		UserEntity entity = this.userDataBaseMockup.get(userId);
+		UserEntity entity = this.userDataBaseMockup.get(userId.toString());
 		if (entity == null)
 			throw new UserNotFoundException("User "+ userId.toString() + " could not found.");
 		
@@ -70,7 +70,7 @@ public class UsersServiceMockUp implements UsersService{
 		UserID userId = new UserID(userDomain, userEmail);
 
 		// Return user data from DB
-		UserEntity userEntity = this.userDataBaseMockup.get(userId);
+		UserEntity userEntity = this.userDataBaseMockup.get(userId.toString());
 		//check if user exist on db
 		if(userEntity == null) {
 			throw new UserNotFoundException("User "+ userId + " could not found.");
@@ -94,7 +94,7 @@ public class UsersServiceMockUp implements UsersService{
 		// store entity to DB if needed
 		if (dirtyFlag)
 			//The put method either updates the value or adds a new entry.
-			this.userDataBaseMockup.put(userId, userEntity);
+			this.userDataBaseMockup.put(userId.toString(), userEntity);
 
 		return this.converter.toBoundary(userEntity);
 	}

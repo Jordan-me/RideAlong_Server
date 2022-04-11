@@ -27,7 +27,7 @@ public class ActivityEntity {
 	private String instance;
 	private Date createdTimestamp;
 	private String createdBy;
-	private Map<String, Object> activityAttributes;
+	private String activityAttributes;
 	
 	public ActivityEntity() {
 	
@@ -77,11 +77,11 @@ public class ActivityEntity {
 	}
 
 	@Column(name="ACTIVITY_ATTRIBUTES")
-	public Map<String, Object> getActivityAttributes() {
+	public String getActivityAttributes() {
 		return activityAttributes;
 	}
 
-	public void setActivityAttributes(Map<String, Object> activityAttributes) {
+	public void setActivityAttributes(String activityAttributes) {
 		this.activityAttributes = activityAttributes;
 	}	
 }

@@ -1,6 +1,8 @@
 package iob.logic;
 
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -24,7 +26,7 @@ public class InstancesConverter {
 		if(instance.getType()!= null && !instance.getType().isEmpty()) {
 			entity.setType(instance.getType());
 		}else {
-			entity.setName("NONE");
+			entity.setType("NONE");
 		}
 		if(instance.getName()!= null && !instance.getName().isEmpty()) {
 			entity.setName(instance.getName());
@@ -47,10 +49,16 @@ public class InstancesConverter {
 		if(instance.getLocation()!= null) {
 			entity.setLocation(instance.getLocation().toString());
 		}else {
-			entity.setLocation((new Location(0.0,0.0)).toString());
+			entity.setLocation((new Location(-0.0,-0.0)).toString());
 		}
 		if(instance.getInstanceAttributes()!= null) {
-			entity.setInstanceAttributes(instance.getInstanceAttributes());
+			Map<String, Object> map = instance.getInstanceAttributes();
+		    String mapAsString = map.keySet().stream()
+		    	      .map(key -> key + "=" + map.get(key))
+		    	      .collect(Collectors.joining("$", "{", "}"));
+			entity.setInstanceAttributes(mapAsString);
+		}else {
+			entity.setInstanceAttributes("NONE");
 		}
 		
 		return entity;
@@ -61,20 +69,32 @@ public class InstancesConverter {
 		
 		String[] splittedInstanceId = entity.getInstanceId().split(",");
 		boundary.setInstanceId(new InstanceId(splittedInstanceId[0], splittedInstanceId[1]));
+		
 		boundary.setType(entity.getType());
 		boundary.setName(entity.getName());
 		boundary.setActive(entity.getActive());
 		boundary.setCreatedTimestamp(entity.getCreatedTimestamp());
 		
-		String[] splittedCreatedBy = entity.getInstanceId().split(",");
-		CreatedBy createdBy = new CreatedBy(new UserID(splittedCreatedBy[0], splittedCreatedBy[1]));
-		boundary.setCreatedBy(createdBy);
+		if(!entity.getCreatedBy().equals("NONE")) {
+			String[] splittedCreatedBy = entity.getCreatedBy().split(",");
+			CreatedBy createdBy = new CreatedBy(new UserID(splittedCreatedBy[0], splittedCreatedBy[1]));
+			boundary.setCreatedBy(createdBy);
+		}
 		
 		String[] splittedLocation = entity.getLocation().split("-");
 		Location location = new Location(Double.parseDouble(splittedLocation[0]),
 										Double.parseDouble(splittedLocation[1]));
 		boundary.setLocation(location);
-		boundary.setInstanceAttributes(entity.getInstanceAttributes());
+		
+		String mapAsString = entity.getInstanceAttributes();
+		if(!mapAsString.equals("NONE")) {
+			Map<String, Object> map = Arrays.stream(mapAsString.split(","))
+					.map(entry -> entry.split("="))
+					.collect(Collectors.toMap(entry -> entry[0], entry -> entry[1]));
+			boundary.setInstanceAttributes(map);			
+		}else {
+			boundary.setInstanceAttributes(null);
+		}
 		
 		return boundary;
 	}

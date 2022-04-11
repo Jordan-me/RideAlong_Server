@@ -32,7 +32,7 @@ public class InstanceEntity {
 	private Date createdTimestamp;
 	private String createdBy;
 	private String location;
-	private Map<String, Object> instanceAttributes;
+	private String instanceAttributes;
 	
 	public InstanceEntity() {
 	}
@@ -105,12 +105,12 @@ public class InstanceEntity {
 	
 	@Lob
 	@Column(name="INSTANCE_ATTRIBUTES")
-	public Map<String, Object> getInstanceAttributes() {
+	public String getInstanceAttributes() {
 		return instanceAttributes;
 	}
 
 
-	public void setInstanceAttributes(Map<String, Object> instanceAttributes) {
+	public void setInstanceAttributes(String instanceAttributes) {
 		this.instanceAttributes = instanceAttributes;
 	}
 
