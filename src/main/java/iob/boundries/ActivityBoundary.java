@@ -22,14 +22,15 @@ public class ActivityBoundary {
 			String type,
 			InstanceId instance,
 			Date createdTimestamp,
-			CreatedBy createdBy) 
+			CreatedBy createdBy, Map<String, Object> activityAttributes) 
 	{
 		this.activityId = null;
 		this.type = type;
 		this.instance = instance;
 		this.createdTimestamp = createdTimestamp;
 		this.createdBy = createdBy;
-		this.activityAttributes = new HashMap<String, Object>();
+//		this.activityAttributes = new HashMap<String, Object>();
+		this.activityAttributes = activityAttributes;
 	}
 
 	public ActivityId getActivityId() {
@@ -83,7 +84,7 @@ public class ActivityBoundary {
 	}
 
 
-	public void setActivityAttributes(String key, Object obj) {
-		this.activityAttributes.put(key, obj);
+	public void setActivityAttributes(Map<String, Object> activityAttributes) {
+		this.activityAttributes = activityAttributes;
 	}
 }

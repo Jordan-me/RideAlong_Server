@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -104,16 +105,19 @@ public class InstancesServiceMockUp  implements InstancesService {
 		/*
 		 * stream over database (map) Entries
 		 * filter entires based on values (ActvityEntity) InvokedBy
-		 * map the new entries to ActivityBoundary
+		 * map the new entries to instanceBoundary
 		 * Collect the data into a list
 		 */
-		
-		return null;
+		List<InstanceBoundary> instancesBoundary = instanceDataBaseMockup.values().stream()
+                .map(v -> converter.toBoundary(v))
+                .collect(Collectors.toList());
+        
+		return instancesBoundary;
 	}
 
 	@Override
 	public void deleteAllInstances() {
-		// TODO Auto-generated method stub
+		this.instanceDataBaseMockup.clear();
 		
 	}
 

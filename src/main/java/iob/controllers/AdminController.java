@@ -1,6 +1,7 @@
 package iob.controllers;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -53,26 +54,27 @@ public class AdminController {
 			path ="/iob/admin/activities",
 			produces = MediaType.APPLICATION_JSON_VALUE)
 		public ActivityBoundary[] getAllActivities() {
-			Random random = new Random(System.currentTimeMillis());
-			
-			return Stream.of(new ActivityBoundary[] {
-				new ActivityBoundary(),
-				new ActivityBoundary(),
-				new ActivityBoundary(),
-				new ActivityBoundary()}
-			).map(boundary->{
-				boundary.setActivityId(new ActivityId("2022b.yarden.dahan",UUID.randomUUID().toString()));
-				boundary.setType("testing 1,2,3");
-				boundary.setInstance(new InstanceId("2022b.yarden.dahan",UUID.randomUUID().toString()));
-				boundary.setCreatedTimestamp(new Date());
-				boundary.setCreatedBy(new CreatedBy(new UserID("2022b.yarden.dahan","abc"+random.nextInt(21)+"@gmail.com")));
-				boundary.setActivityAttributes("event", "event"+random.nextInt(1001));
-
-				return boundary;
-			})
-			.collect(Collectors.toList())
-			.toArray(new ActivityBoundary[0]);
-		}
+		Random random = new Random(System.currentTimeMillis());
+		
+		return Stream.of(new ActivityBoundary[] {
+			new ActivityBoundary(),
+			new ActivityBoundary(),
+			new ActivityBoundary(),
+			new ActivityBoundary()}
+		).map(boundary->{
+			boundary.setActivityId(new ActivityId("2022b.yarden.dahan",UUID.randomUUID().toString()));
+			boundary.setType("testing 1,2,3");
+			boundary.setInstance(new InstanceId("2022b.yarden.dahan",UUID.randomUUID().toString()));
+			boundary.setCreatedTimestamp(new Date());
+			boundary.setCreatedBy(new CreatedBy(new UserID("2022b.yarden.dahan","abc"+random.nextInt(21)+"@gmail.com")));
+			HashMap<String, Object> map = new HashMap<String, Object>(); 
+			map.put("event", "event"+random.nextInt(1001));
+			boundary.setActivityAttributes(map);
+			return boundary;
+		})
+		.collect(Collectors.toList())
+		.toArray(new ActivityBoundary[0]);
+	}
 	
 	@RequestMapping(
 			method = RequestMethod.DELETE,

@@ -3,6 +3,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import iob.boundries.ActivityBoundary;
 import iob.boundries.NewUserBoundary;
 import iob.boundries.UserBoundary;
 import iob.boundries.UserID;
@@ -102,14 +104,16 @@ public class UsersServiceMockUp implements UsersService{
 // Admin permission
 	@Override
 	public List<UserBoundary> getAllUsers() {
-
-		// TODO Auto-generated method stub
-		return null;
+		List<UserBoundary> usersBoundary = userDataBaseMockup.values().stream()
+                .map(v -> converter.toBoundary(v))
+                .collect(Collectors.toList());
+        
+		return usersBoundary;
 	}
 
 	@Override
 	public void deleteAllUsers() {
-		// TODO Auto-generated method stub
+		this.userDataBaseMockup.clear();
 		
 	}
 
