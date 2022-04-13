@@ -96,6 +96,7 @@ public class AdminController {
 			method = RequestMethod.DELETE,
 			path = "/iob/admin/instances")
 		public void deleteAllInstances () {
+			//TODO: validate admin permission
 			instancesService.deleteAllInstances();
 		}
 	
@@ -103,6 +104,6 @@ public class AdminController {
 			method = RequestMethod.DELETE,
 			path = "/iob/admin/activities")
 	public void deleteAllActivities () {
-		// MOCKUP implementation...
+		//TODO: validate admin permission
 	}
 }
