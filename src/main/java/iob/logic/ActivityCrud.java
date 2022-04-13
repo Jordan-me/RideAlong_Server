@@ -1,5 +1,10 @@
 package iob.logic;
 
-public interface ActivityCrud {
+import org.springframework.data.repository.CrudRepository;
+
+import iob.data.ActivityEntity;
+
+public interface ActivityCrud extends CrudRepository<ActivityEntity, String>
+  {
 
 }
