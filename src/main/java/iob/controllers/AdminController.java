@@ -23,7 +23,12 @@ import iob.logic.UsersService;
 public class AdminController {
 	private UsersService admin;
 	private InstancesService instancesService;
+	private ActivitiesService activitiesService;
 	
+	@Autowired
+	public void ActivitiesService(ActivitiesService activitiesService) {
+		this.activitiesService = activitiesService;
+	}
 	@Autowired
 	public void setInstancesService(InstancesService instancesService) {
 		this.instancesService = instancesService;
@@ -38,22 +43,7 @@ public class AdminController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 		public UserBoundary[] getAllUsers() {
 			return admin.getAllUsers().toArray(new UserBoundary[0]);
-//			Random random = new Random(System.currentTimeMillis());
-//			
-//			return Stream.of(new UserBoundary[] {
-//				new UserBoundary(),
-//				new UserBoundary(),
-//				new UserBoundary(),
-//				new UserBoundary()}
-//			).map(user->{
-//				user.setUserId(new UserID("2022b.yarden.dahan",random.nextInt(21)+"abc@gmail.com"));
-//				user.setAvatar(null);
-//				user.setRole("Traveler");
-//				user.setUsername("username"+random.nextInt(21));
-//				return user;
-//			})
-//			.collect(Collectors.toList())
-//			.toArray(new UserBoundary[0]);
+
 		}
 	
 	@RequestMapping(
@@ -61,26 +51,7 @@ public class AdminController {
 			path ="/iob/admin/activities",
 			produces = MediaType.APPLICATION_JSON_VALUE)
 		public ActivityBoundary[] getAllActivities() {
-		Random random = new Random(System.currentTimeMillis());
-		
-		return Stream.of(new ActivityBoundary[] {
-			new ActivityBoundary(),
-			new ActivityBoundary(),
-			new ActivityBoundary(),
-			new ActivityBoundary()}
-		).map(boundary->{
-			boundary.setActivityId(new ActivityId("2022b.yarden.dahan",UUID.randomUUID().toString()));
-			boundary.setType("testing 1,2,3");
-			boundary.setInstance(new InstanceId("2022b.yarden.dahan",UUID.randomUUID().toString()));
-			boundary.setCreatedTimestamp(new Date());
-			boundary.setCreatedBy(new CreatedBy(new UserID("2022b.yarden.dahan","abc"+random.nextInt(21)+"@gmail.com")));
-			HashMap<String, Object> map = new HashMap<String, Object>(); 
-			map.put("event", "event"+random.nextInt(1001));
-			boundary.setActivityAttributes(map);
-			return boundary;
-		})
-		.collect(Collectors.toList())
-		.toArray(new ActivityBoundary[0]);
+			return activitiesService.getAllActivities().toArray(new ActivityBoundary[0]);
 	}
 	
 	@RequestMapping(
@@ -105,5 +76,6 @@ public class AdminController {
 			path = "/iob/admin/activities")
 	public void deleteAllActivities () {
 		//TODO: validate admin permission
+		activitiesService.deleteAllActivities();
 	}
 }

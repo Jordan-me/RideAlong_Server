@@ -17,7 +17,7 @@ import iob.boundries.UserBoundary;
 import iob.boundries.UserID;
 import iob.data.UserEntity;
 
-@Service
+//@Service
 public class UsersServiceMockUp implements UsersService{
 	private Map<String, UserEntity> userDataBaseMockup;
 	private UsersConverter converter;
@@ -41,7 +41,7 @@ public class UsersServiceMockUp implements UsersService{
 	
 	@Override
 	public UserBoundary createUser(UserBoundary user) {
-		
+		System.out.println("enter MockUp");
 		// convert UserBoundary to UserEntity
 		UserEntity entity = this.converter.toEntity(user);
 		

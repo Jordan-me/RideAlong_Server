@@ -20,7 +20,7 @@ import iob.boundries.ActivityId;
 import iob.data.ActivityEntity;
 
 
-@Service
+//@Service
 public class ActivitiesServiceMockUp  implements ActivitiesService {
 	private Map<String,ActivityEntity> activityDataBaseMockup;
 	private ActivitiesConverter converter;

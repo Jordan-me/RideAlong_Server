@@ -26,8 +26,7 @@ public class UsersConverter {
 	public UserEntity toEntity (UserBoundary boundary) {
 		UserEntity entity = new UserEntity();
 		if(boundary.getUserId().getEmail() != null) {
-			String uID = boundary.getUserId().getDomain() + "," + boundary.getUserId().getEmail();
-			entity.setUserId(uID);
+			entity.setUserId(boundary.getUserId().toString().toLowerCase());
 		}
 		entity.setRole(
 				toEntity
@@ -60,7 +59,7 @@ public class UsersConverter {
 	public UserBoundary  toBoundary (UserEntity entity) {
 		
 		UserBoundary  boundary = new UserBoundary ();
-		String[] splittedUserID = entity.getUserId().split(",");
+		String[] splittedUserID = entity.getUserId().toLowerCase().split("_");
 		boundary.setUserId(new UserID(splittedUserID[0], splittedUserID[1]));
 		boundary.setUsername(entity.getUsername());
 		boundary.setRole(entity.getRole().name().toLowerCase());

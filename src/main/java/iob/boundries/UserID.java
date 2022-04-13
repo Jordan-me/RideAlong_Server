@@ -33,7 +33,7 @@ public class UserID {
 
 	@Override
 	public String toString() {
-		return "" + this.email + "_" + this.domain;
+		return "" + this.domain + "_" + this.email;
 	}
 	
 }
