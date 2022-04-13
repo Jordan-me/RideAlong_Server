@@ -1,9 +1,11 @@
 package iob.logic;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import iob.boundries.ActivityBoundary;
+import iob.boundries.ActivityId;
 import iob.data.ActivityEntity;
 
 
@@ -21,7 +24,12 @@ import iob.data.ActivityEntity;
 public class ActivitiesServiceMockUp  implements ActivitiesService {
 	private Map<String,ActivityEntity> activityDataBaseMockup;
 	private ActivitiesConverter converter;
+	private String domainName;
 	
+	@Value("${spring.application.name}")
+	public void setDomainName(String domainName) {
+		this.domainName = domainName;
+	}
 	@Autowired
 	public ActivitiesServiceMockUp(ActivitiesConverter converter) {
 		super();
@@ -40,9 +48,12 @@ public class ActivitiesServiceMockUp  implements ActivitiesService {
 	}
 	@Override
 	public Object invokeActivity(ActivityBoundary activity) {
+		activity.setActivityId(new ActivityId(domainName,UUID.randomUUID().toString()));
+		activity.setCreatedTimestamp(new Date());
 		ActivityEntity entity = converter.toEntity(activity);
-		activityDataBaseMockup.put(activity.getActivityId().toString(), entity);
-		return entity.toString();
+		activityDataBaseMockup.put(activity.getActivityId().toString().toLowerCase(), entity);
+		ActivityBoundary boundary = converter.toBoundary(entity);
+		return boundary;
 	}
 
 	@Override

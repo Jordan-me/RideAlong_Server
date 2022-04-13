@@ -19,4 +19,9 @@ public class CreatedBy {
 		this.userId = userId;
 	}
 
+	@Override
+	public String toString() {
+		return this.userId.toString();
+	}
+
 }

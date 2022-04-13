@@ -15,13 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import iob.boundries.*;
 import iob.logic.ActivitiesService;
+import iob.logic.InstancesService;
 import iob.logic.UsersService;
 
 
 @RestController
 public class AdminController {
 	private UsersService admin;
+	private InstancesService instancesService;
 	
+	@Autowired
+	public void setInstancesService(InstancesService instancesService) {
+		this.instancesService = instancesService;
+	}
 	@Autowired
 	public void setUsersService(UsersService admin) {
 		this.admin = admin;
@@ -31,22 +37,23 @@ public class AdminController {
 			path ="/iob/admin/users",
 			produces = MediaType.APPLICATION_JSON_VALUE)
 		public UserBoundary[] getAllUsers() {
-			Random random = new Random(System.currentTimeMillis());
-			
-			return Stream.of(new UserBoundary[] {
-				new UserBoundary(),
-				new UserBoundary(),
-				new UserBoundary(),
-				new UserBoundary()}
-			).map(user->{
-				user.setUserId(new UserID("2022b.yarden.dahan",random.nextInt(21)+"abc@gmail.com"));
-				user.setAvatar(null);
-				user.setRole("Traveler");
-				user.setUsername("username"+random.nextInt(21));
-				return user;
-			})
-			.collect(Collectors.toList())
-			.toArray(new UserBoundary[0]);
+			return admin.getAllUsers().toArray(new UserBoundary[0]);
+//			Random random = new Random(System.currentTimeMillis());
+//			
+//			return Stream.of(new UserBoundary[] {
+//				new UserBoundary(),
+//				new UserBoundary(),
+//				new UserBoundary(),
+//				new UserBoundary()}
+//			).map(user->{
+//				user.setUserId(new UserID("2022b.yarden.dahan",random.nextInt(21)+"abc@gmail.com"));
+//				user.setAvatar(null);
+//				user.setRole("Traveler");
+//				user.setUsername("username"+random.nextInt(21));
+//				return user;
+//			})
+//			.collect(Collectors.toList())
+//			.toArray(new UserBoundary[0]);
 		}
 	
 	@RequestMapping(
@@ -80,7 +87,8 @@ public class AdminController {
 			method = RequestMethod.DELETE,
 			path = "/iob/admin/users")
 	public void deleteAllUsers () {
-		// MOCKUP implementation...
+		//TODO: validate admin permission
+		admin.deleteAllUsers();
 	}
 	
 	
@@ -88,7 +96,7 @@ public class AdminController {
 			method = RequestMethod.DELETE,
 			path = "/iob/admin/instances")
 		public void deleteAllInstances () {
-			// MOCKUP implementation...
+			instancesService.deleteAllInstances();
 		}
 	
 	@RequestMapping(

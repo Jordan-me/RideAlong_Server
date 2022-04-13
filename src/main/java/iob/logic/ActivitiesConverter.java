@@ -21,8 +21,7 @@ public class ActivitiesConverter {
 
 		ActivityEntity entity = new ActivityEntity();
 		if (activity.getActivityId() != null) {
-			String aID = activity.getInstance().getDomain() + "," + activity.getInstance().getId();
-			entity.setActivityId(aID);
+			entity.setActivityId(activity.getActivityId().toString());
 		}
 		if (activity.getType() != null && !activity.getType().isEmpty())
 			entity.setType(activity.getType());
@@ -31,15 +30,13 @@ public class ActivitiesConverter {
 		}
 		if (activity.getInstance() != null && !activity.getInstance().getDomain().isEmpty()
 				&& !activity.getInstance().getId().isEmpty())
-			entity.setInstance(activity.getInstance().getDomain() + "," + activity.getInstance().getId());
+			entity.setInstance(activity.getInstance().toString());
 		else {
-			entity.setInstance("NONE");
+			throw new RuntimeException("Activity must connect to instance- InstanceId missing");
 		}
 		entity.setCreatedTimestamp(activity.getCreatedTimestamp());
 		if(activity.getCreatedBy()!= null) {
-			String createdBy = activity.getCreatedBy().getUserId().getDomain() + "," 
-								+ activity.getCreatedBy().getUserId().getEmail();
-			entity.setCreatedBy(createdBy);
+			entity.setCreatedBy(activity.getCreatedBy().toString());
 		}else {
 			entity.setCreatedBy("NONE");
 		}
@@ -56,11 +53,10 @@ public class ActivitiesConverter {
 	}
 
 	public ActivityBoundary toBoundary(ActivityEntity entity) {
-		System.out.println("Started running activities converter -> to boundary");
-
+		
 		ActivityBoundary boundary = new ActivityBoundary();
 		
-		String[] splittedActiveId = entity.getActivityId().split(",");
+		String[] splittedActiveId = entity.getActivityId().split("_");
 		boundary.setActivityId(new ActivityId(splittedActiveId[0], splittedActiveId[1]));
 		
 		boundary.setType(entity.getType());
@@ -68,7 +64,7 @@ public class ActivitiesConverter {
 		boundary.setCreatedTimestamp(entity.getCreatedTimestamp());
 		
 		if(!entity.getCreatedBy().equals("NONE")) {
-			String[] splittedCreatedBy = entity.getCreatedBy().split(",");
+			String[] splittedCreatedBy = entity.getCreatedBy().split("_");
 			CreatedBy createdBy = new CreatedBy(new UserID(splittedCreatedBy[0], splittedCreatedBy[1]));
 			boundary.setCreatedBy(createdBy);
 		}
