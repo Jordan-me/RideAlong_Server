@@ -2,8 +2,10 @@ package iob.logic;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import iob.boundries.CreatedBy;
@@ -20,7 +22,7 @@ public class InstancesConverter {
 		InstanceEntity entity = new InstanceEntity();
 		
 		if(instance.getInstanceId()!= null) {
-			String iID = instance.getInstanceId().getDomain() + "," + instance.getInstanceId().getId();
+			String iID = instance.getInstanceId().toString().toLowerCase();
 			entity.setInstanceId(iID);
 		}
 		if(instance.getType()!= null && !instance.getType().isEmpty()) {
@@ -33,10 +35,13 @@ public class InstancesConverter {
 		}else {
 			entity.setName("NONE");
 		}
-		if(instance.getActive()== null) {
+		if(instance.getActive()!= null) {
 			entity.setActive((boolean)instance.getActive());
 		}else {
 			entity.setActive(false);
+		}
+		if(instance.getCreatedTimestamp()!= null) {
+			
 		}
 		entity.setCreatedTimestamp(instance.getCreatedTimestamp());
 		if(instance.getCreatedBy()!= null) {
@@ -49,7 +54,7 @@ public class InstancesConverter {
 		if(instance.getLocation()!= null) {
 			entity.setLocation(instance.getLocation().toString());
 		}else {
-			entity.setLocation((new Location(-0.0,-0.0)).toString());
+			entity.setLocation((new Location(0.0,0.0)).toString());
 		}
 		if(instance.getInstanceAttributes()!= null) {
 			Map<String, Object> map = instance.getInstanceAttributes();
@@ -67,7 +72,7 @@ public class InstancesConverter {
 	public InstanceBoundary toBoundary(InstanceEntity entity) {
 		InstanceBoundary boundary = new InstanceBoundary();
 		
-		String[] splittedInstanceId = entity.getInstanceId().split(",");
+		String[] splittedInstanceId = entity.getInstanceId().split("_");
 		boundary.setInstanceId(new InstanceId(splittedInstanceId[0], splittedInstanceId[1]));
 		
 		boundary.setType(entity.getType());

@@ -1,9 +1,11 @@
 package iob.logic;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -22,7 +24,12 @@ import iob.data.UserEntity;
 public class InstancesServiceMockUp  implements InstancesService {
 	private Map<String,InstanceEntity> instanceDataBaseMockup;
 	private InstancesConverter converter;
+	private String domainName;
 	
+	@Value("${spring.application.name}")
+	public void setDomainName(String domainName) {
+		this.domainName = domainName;
+	}
 	@Autowired
 	public InstancesServiceMockUp(InstancesConverter converter) {
 		super();
@@ -42,12 +49,13 @@ public class InstancesServiceMockUp  implements InstancesService {
 
 	@Override
 	public InstanceBoundary createInstance(InstanceBoundary instance) {
-		
+		instance.setInstanceId(new InstanceId(domainName, UUID.randomUUID().toString()) );
+		instance.setCreatedTimestamp(new Date());
 		// convert InstanceBoundary to InstanceEntity
 		InstanceEntity entity = this.converter.toEntity(instance);
 		
 		// store entity to DB
-		this.instanceDataBaseMockup.put(instance.getInstanceId().toString(), entity);
+		this.instanceDataBaseMockup.put(entity.getInstanceId().toString().toLowerCase(), entity);
 		
 		// Convert UserEntity to UserBoundary
 		InstanceBoundary instanceBoundary = this.converter.toBoundary(entity);
@@ -82,7 +90,7 @@ public class InstancesServiceMockUp  implements InstancesService {
 		// store entity to DB if needed
 		if (dirtyFlag)
 			//The put method either updates the value or adds a new entry.
-			this.instanceDataBaseMockup.put(entity.getInstanceId(), entity);
+			this.instanceDataBaseMockup.put(entity.getInstanceId().toString().toLowerCase(), entity);
 
 		InstanceBoundary boundary = this.converter.toBoundary(entity);
 		return boundary;
@@ -92,7 +100,7 @@ public class InstancesServiceMockUp  implements InstancesService {
 	public InstanceBoundary getSpecificInstance(String instanceDomain, String instanceId) {
 
 		InstanceId id = new InstanceId(instanceDomain, instanceId);
-		InstanceEntity entity = this.instanceDataBaseMockup.get(id.toString());
+		InstanceEntity entity = this.instanceDataBaseMockup.get(id.toString().toLowerCase());
 		if(entity == null) {
 			throw new RuntimeException("Instance "+ id.toString() + " could not found.");
 		}
