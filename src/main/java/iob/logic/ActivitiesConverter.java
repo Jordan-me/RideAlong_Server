@@ -1,10 +1,11 @@
 package iob.logic;
 
-import java.util.Arrays;
 import java.util.Map;
-import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import iob.boundries.ActivityBoundary;
 import iob.boundries.ActivityId;
@@ -15,6 +16,12 @@ import iob.data.ActivityEntity;
 
 @Component
 public class ActivitiesConverter {
+	private ObjectMapper jackson;
+	
+	@PostConstruct
+	public void init() {
+		this.jackson = new ObjectMapper();
+	}
 	
 	public ActivityEntity toEntity(ActivityBoundary activity) {
 		System.out.println("Started running activities converter -> to entity");
@@ -40,18 +47,22 @@ public class ActivitiesConverter {
 		}else {
 			entity.setCreatedBy("NONE");
 		}
-		if(activity.getActivityAttributes()!= null) {
-			Map<String, Object> map = activity.getActivityAttributes();
-		    String mapAsString = map.keySet().stream()
-		    	      .map(key -> key + "=" + map.get(key))
-		    	      .collect(Collectors.joining("$", "{", "}"));
-			entity.setActivityAttributes(mapAsString);
-		}else {
-			entity.setActivityAttributes("NONE");
+		if (activity.getActivityAttributes() != null) {
+			entity.setActivityAttributes(
+			  this.toEntity(
+					  activity.getActivityAttributes()));
 		}
 		return entity;
 	}
-
+	
+	public String toEntity (Map<String, Object> object) {
+		try {
+			return this.jackson
+				.writeValueAsString(object);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 	public ActivityBoundary toBoundary(ActivityEntity entity) {
 		
 		ActivityBoundary boundary = new ActivityBoundary();
@@ -68,17 +79,19 @@ public class ActivitiesConverter {
 			CreatedBy createdBy = new CreatedBy(new UserID(splittedCreatedBy[0], splittedCreatedBy[1]));
 			boundary.setCreatedBy(createdBy);
 		}
-		
-		String mapAsString = entity.getActivityAttributes();
-		if(!mapAsString.equals("NONE")) {
-			Map<String, Object> map = Arrays.stream(mapAsString.split(","))
-					.map(entry -> entry.split("="))
-					.collect(Collectors.toMap(entry -> entry[0], entry -> entry[1]));
-			boundary.setActivityAttributes(map);			
-		}else {
-			boundary.setActivityAttributes(null);
+		if (entity.getActivityAttributes() != null) {
+			boundary.setActivityAttributes(
+				this.toBoundaryFromJsonString(entity.getActivityAttributes()));
 		}
-		
+			
 		return boundary;
+	}
+	public Map<String, Object> toBoundaryFromJsonString (String json){
+		try {
+			return this.jackson
+				.readValue(json, Map.class);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 }
