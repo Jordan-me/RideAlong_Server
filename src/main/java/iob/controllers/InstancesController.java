@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import iob.boundries.*;
@@ -39,7 +40,61 @@ public class InstancesController {
 					.toArray(new InstanceBoundary[0]);
 		}
 	
+	// Retrieve instance
+	@RequestMapping(
+			path = "/iob/instances/{instanceDomain}/{instanceId}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public InstanceBoundary getInstance(@PathVariable("instanceDomain") String domain,
+			@PathVariable("instanceId") String id) {
+		return this.instancesService.getSpecificInstance(domain,id);
+		
+	}
+	//TODO: implement getInstancesByName
+	@RequestMapping(
+			method = RequestMethod.GET,
+			path ="/iob/instances/search/byName/{name}",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public InstanceBoundary[] getInstancesByName(
+			@PathVariable("name") String instanceName,
+			@RequestParam(name="userDomain", required = true) String domain,
+			@RequestParam(name="userEmail", required = true) String email,
+			@RequestParam(name="size", required = false, defaultValue = "10") int size,
+			@RequestParam(name="page", required = false, defaultValue = "0") int page) {
+		return this.instancesService.getAllInstances()
+				.toArray(new InstanceBoundary[0]);
+	}
+	//TODO: implement getInstancesByType
+	@RequestMapping(
+			method = RequestMethod.GET,
+			path ="/iob/instances/search/byType/{type}",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+		public InstanceBoundary[] getInstancesByType(
+				@PathVariable("type") String instanceType,
+				@RequestParam(name="userDomain", required = true) String domain,
+				@RequestParam(name="userEmail", required = true) String email,
+				@RequestParam(name="size", required = false, defaultValue = "10") int size,
+				@RequestParam(name="page", required = false, defaultValue = "0") int page) {
+			return this.instancesService.getAllInstances()
+					.toArray(new InstanceBoundary[0]);
+		}
 	
+	//TODO: implement getAInstancesByLocation
+	@RequestMapping(
+			method = RequestMethod.GET,
+			path ="/iob/instances/search/near/{lat}/{lng}/{distance}",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+		public InstanceBoundary[] getAInstancesByLocation(
+				@PathVariable("lat") String lat,
+				@PathVariable("lng") String lng,
+				@PathVariable("distance") String distance,
+				@RequestParam(name="userDomain", required = true) String domain,
+				@RequestParam(name="userEmail", required = true) String email,
+				@RequestParam(name="size", required = false, defaultValue = "10") int size,
+				@RequestParam(name="page", required = false, defaultValue = "0") int page) {
+			return this.instancesService.getAllInstances()
+					.toArray(new InstanceBoundary[0]);
+		}
 	@RequestMapping(
 			method = RequestMethod.POST,
 			path = "/iob/instances",
@@ -48,16 +103,6 @@ public class InstancesController {
 		public InstanceBoundary createInstance (@RequestBody InstanceBoundary boundary) {
 			return this.instancesService.createInstance(boundary);
 		}
-	// Retrieve instance
-	@RequestMapping(
-			path = "/iob/instances/{instanceDomain}/{instanceId}",
-			method = RequestMethod.GET,
-			produces = MediaType.APPLICATION_JSON_VALUE)
-	public InstanceBoundary getInstance(@PathVariable("instanceDomain") String domain,
-										@PathVariable("instanceId") String id) {
-		return this.instancesService.getSpecificInstance(domain,id);
-
-	}
 	//update an instance
 	@RequestMapping(
 			path = "/iob/instances/{instanceDomain}/{instanceId}",

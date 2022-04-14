@@ -37,6 +37,15 @@ public class AdminController {
 	public void setUsersService(UsersService admin) {
 		this.admin = admin;
 	}
+	
+	@RequestMapping(
+			method = RequestMethod.GET,
+			path ="/iob/admin/activities",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ActivityBoundary[] getAllActivities() {
+		return activitiesService.getAllActivities().toArray(new ActivityBoundary[0]);
+	}
+	
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path ="/iob/admin/users",
@@ -45,14 +54,6 @@ public class AdminController {
 			return admin.getAllUsers().toArray(new UserBoundary[0]);
 
 		}
-	
-	@RequestMapping(
-			method = RequestMethod.GET,
-			path ="/iob/admin/activities",
-			produces = MediaType.APPLICATION_JSON_VALUE)
-		public ActivityBoundary[] getAllActivities() {
-			return activitiesService.getAllActivities().toArray(new ActivityBoundary[0]);
-	}
 	
 	@RequestMapping(
 			method = RequestMethod.DELETE,
