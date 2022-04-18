@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import iob.boundries.ActivityBoundary;
 import iob.boundries.ActivityId;
 import iob.boundries.CreatedBy;
+import iob.boundries.Instance;
+import iob.boundries.InstanceId;
 import iob.boundries.UserID;
 import iob.data.ActivityEntity;
 
@@ -24,29 +26,13 @@ public class ActivitiesConverter {
 	}
 	
 	public ActivityEntity toEntity(ActivityBoundary activity) {
-		System.out.println("Started running activities converter -> to entity");
-
 		ActivityEntity entity = new ActivityEntity();
-		if (activity.getActivityId() != null) {
-			entity.setActivityId(activity.getActivityId().toString());
-		}
-		if (activity.getType() != null && !activity.getType().isEmpty())
-			entity.setType(activity.getType());
-		else {
-			entity.setType("NONE");
-		}
-		if (activity.getInstance() != null && !activity.getInstance().getDomain().isEmpty()
-				&& !activity.getInstance().getId().isEmpty())
-			entity.setInstance(activity.getInstance().toString());
-		else {
-			throw new RuntimeException("Activity must connect to instance- InstanceId missing");
-		}
+		entity.setActivityId(activity.getActivityId().toString());
+		entity.setType(activity.getType());
+		entity.setInstance(activity.getInstance().toString());
 		entity.setCreatedTimestamp(activity.getCreatedTimestamp());
-		if(activity.getCreatedBy()!= null) {
-			entity.setCreatedBy(activity.getCreatedBy().toString());
-		}else {
-			entity.setCreatedBy("NONE");
-		}
+		entity.setCreatedBy(activity.getInvokedBy().toString());
+
 		if (activity.getActivityAttributes() != null) {
 			entity.setActivityAttributes(
 			  this.toEntity(
@@ -64,7 +50,6 @@ public class ActivitiesConverter {
 		}
 	}
 	public ActivityBoundary toBoundary(ActivityEntity entity) {
-		
 		ActivityBoundary boundary = new ActivityBoundary();
 		
 		String[] splittedActiveId = entity.getActivityId().split("_");
@@ -74,11 +59,13 @@ public class ActivitiesConverter {
 		boundary.setActivityId(new ActivityId(splittedActiveId[0], splittedActiveId[1]));
 		boundary.setCreatedTimestamp(entity.getCreatedTimestamp());
 		
-		if(!entity.getCreatedBy().equals("NONE")) {
-			String[] splittedCreatedBy = entity.getCreatedBy().split("_");
-			CreatedBy createdBy = new CreatedBy(new UserID(splittedCreatedBy[0], splittedCreatedBy[1]));
-			boundary.setCreatedBy(createdBy);
-		}
+		String[] splittedCreatedBy = entity.getCreatedBy().split("_");
+		CreatedBy createdBy = new CreatedBy(new UserID(splittedCreatedBy[0], splittedCreatedBy[1]));
+		boundary.setInvokedBy(createdBy);
+		
+		String[] splittedInstanceID = entity.getInstance().split("_");
+		Instance instance = new Instance(new InstanceId(splittedInstanceID[0], splittedInstanceID[1]));
+		boundary.setInstance(instance);
 		if (entity.getActivityAttributes() != null) {
 			boundary.setActivityAttributes(
 				this.toBoundaryFromJsonString(entity.getActivityAttributes()));

@@ -50,51 +50,51 @@ public class InstancesController {
 		return this.instancesService.getSpecificInstance(domain,id);
 		
 	}
-	//TODO: implement getInstancesByName
-	@RequestMapping(
-			method = RequestMethod.GET,
-			path ="/iob/instances/search/byName/{name}",
-			produces = MediaType.APPLICATION_JSON_VALUE)
-	public InstanceBoundary[] getInstancesByName(
-			@PathVariable("name") String instanceName,
-			@RequestParam(name="userDomain", required = true) String domain,
-			@RequestParam(name="userEmail", required = true) String email,
-			@RequestParam(name="size", required = false, defaultValue = "10") int size,
-			@RequestParam(name="page", required = false, defaultValue = "0") int page) {
-		return this.instancesService.getAllInstances()
-				.toArray(new InstanceBoundary[0]);
-	}
-	//TODO: implement getInstancesByType
-	@RequestMapping(
-			method = RequestMethod.GET,
-			path ="/iob/instances/search/byType/{type}",
-			produces = MediaType.APPLICATION_JSON_VALUE)
-		public InstanceBoundary[] getInstancesByType(
-				@PathVariable("type") String instanceType,
-				@RequestParam(name="userDomain", required = true) String domain,
-				@RequestParam(name="userEmail", required = true) String email,
-				@RequestParam(name="size", required = false, defaultValue = "10") int size,
-				@RequestParam(name="page", required = false, defaultValue = "0") int page) {
-			return this.instancesService.getAllInstances()
-					.toArray(new InstanceBoundary[0]);
-		}
-	
-	//TODO: implement getAInstancesByLocation
-	@RequestMapping(
-			method = RequestMethod.GET,
-			path ="/iob/instances/search/near/{lat}/{lng}/{distance}",
-			produces = MediaType.APPLICATION_JSON_VALUE)
-		public InstanceBoundary[] getAInstancesByLocation(
-				@PathVariable("lat") String lat,
-				@PathVariable("lng") String lng,
-				@PathVariable("distance") String distance,
-				@RequestParam(name="userDomain", required = true) String domain,
-				@RequestParam(name="userEmail", required = true) String email,
-				@RequestParam(name="size", required = false, defaultValue = "10") int size,
-				@RequestParam(name="page", required = false, defaultValue = "0") int page) {
-			return this.instancesService.getAllInstances()
-					.toArray(new InstanceBoundary[0]);
-		}
+//	//TODO: implement getInstancesByName
+//	@RequestMapping(
+//			method = RequestMethod.GET,
+//			path ="/iob/instances/search/byName/{name}",
+//			produces = MediaType.APPLICATION_JSON_VALUE)
+//	public InstanceBoundary[] getInstancesByName(
+//			@PathVariable("name") String instanceName,
+//			@RequestParam(name="userDomain", required = true) String domain,
+//			@RequestParam(name="userEmail", required = true) String email,
+//			@RequestParam(name="size", required = false, defaultValue = "10") int size,
+//			@RequestParam(name="page", required = false, defaultValue = "0") int page) {
+//		return this.instancesService.getAllInstances()
+//				.toArray(new InstanceBoundary[0]);
+//	}
+//	//TODO: implement getInstancesByType
+//	@RequestMapping(
+//			method = RequestMethod.GET,
+//			path ="/iob/instances/search/byType/{type}",
+//			produces = MediaType.APPLICATION_JSON_VALUE)
+//		public InstanceBoundary[] getInstancesByType(
+//				@PathVariable("type") String instanceType,
+//				@RequestParam(name="userDomain", required = true) String domain,
+//				@RequestParam(name="userEmail", required = true) String email,
+//				@RequestParam(name="size", required = false, defaultValue = "10") int size,
+//				@RequestParam(name="page", required = false, defaultValue = "0") int page) {
+//			return this.instancesService.getAllInstances()
+//					.toArray(new InstanceBoundary[0]);
+//		}
+//	
+//	//TODO: implement getAInstancesByLocation
+//	@RequestMapping(
+//			method = RequestMethod.GET,
+//			path ="/iob/instances/search/near/{lat}/{lng}/{distance}",
+//			produces = MediaType.APPLICATION_JSON_VALUE)
+//		public InstanceBoundary[] getAInstancesByLocation(
+//				@PathVariable("lat") String lat,
+//				@PathVariable("lng") String lng,
+//				@PathVariable("distance") String distance,
+//				@RequestParam(name="userDomain", required = true) String domain,
+//				@RequestParam(name="userEmail", required = true) String email,
+//				@RequestParam(name="size", required = false, defaultValue = "10") int size,
+//				@RequestParam(name="page", required = false, defaultValue = "0") int page) {
+//			return this.instancesService.getAllInstances()
+//					.toArray(new InstanceBoundary[0]);
+//		}
 	@RequestMapping(
 			method = RequestMethod.POST,
 			path = "/iob/instances",

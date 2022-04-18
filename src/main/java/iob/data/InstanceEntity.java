@@ -1,10 +1,9 @@
 package iob.data;
 
 import java.util.Date;
-import java.util.Map;
+
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
@@ -12,7 +11,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import iob.boundries.Location;
 
 
 /*
@@ -31,7 +29,8 @@ public class InstanceEntity {
 	private boolean active;
 	private Date createdTimestamp;
 	private String createdBy;
-	private String location;
+	private double lat;
+	private double lng;
 	private String instanceAttributes;
 	
 	public InstanceEntity() {
@@ -82,18 +81,25 @@ public class InstanceEntity {
 	public void setCreatedTimestamp(Date createdTimestamp) {
 		this.createdTimestamp = createdTimestamp;
 	}
-	@Lob
-	@Column(name="LOCATION")
-	public String getLocation() {
-		return location;
+	@Column(name="LOCATION_lat")
+	public double getLat() {
+		return lat;
 	}
 	
 	
-	public void setLocation(String location) {
-		this.location = location;
+	public void setLat(double lat) {
+		this.lat = lat;
+	}
+	@Column(name="LOCATION_lng")
+	public double getLng() {
+		return lng;
 	}
 	
-	@Lob
+	
+	public void setLng(double lng) {
+		this.lng = lng;
+	}
+	
 	@Column(name="CREATED_BY")
 	public String getCreatedBy() {
 		return createdBy;
@@ -117,7 +123,7 @@ public class InstanceEntity {
 	@Override
 	public String toString() {
 		return "InstanceEntity [instanceId=" + instanceId + ", type=" + type + ", name=" + name + ", active=" + active
-				+ ", createdTimestamp=" + createdTimestamp + ", createdBy=" + createdBy + ", location=" + location
+				+ ", createdTimestamp=" + createdTimestamp + ", createdBy=" + createdBy + ", location=(" + lat + "," + lng + ")"
 				+ ", instanceAttributes=" + instanceAttributes + "]";
 	}
 

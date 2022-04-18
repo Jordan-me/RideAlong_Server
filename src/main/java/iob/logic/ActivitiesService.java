@@ -6,9 +6,9 @@ import iob.boundries.ActivityBoundary;
 
 public interface ActivitiesService {
 	
-	Object invokeActivity(ActivityBoundary activity);
+	public Object invokeActivity(ActivityBoundary activity);
 	
-	List<ActivityBoundary> getAllActivities();
+	public List<ActivityBoundary> getAllActivities();
 	
-	void deleteAllActivities();
+	public void deleteAllActivities();
 }

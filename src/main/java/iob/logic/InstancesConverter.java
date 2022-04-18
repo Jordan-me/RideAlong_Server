@@ -27,41 +27,16 @@ public class InstancesConverter {
 	
 	public InstanceEntity toEntity(InstanceBoundary instance) {
 		InstanceEntity entity = new InstanceEntity();
-		
-		if(instance.getInstanceId()!= null) {
-			String iID = instance.getInstanceId().toString().toLowerCase();
-			entity.setInstanceId(iID);
-		}
-		if(instance.getType()!= null && !instance.getType().isEmpty()) {
-			entity.setType(instance.getType());
-		}else {
-			entity.setType("NONE");
-		}
-		if(instance.getName()!= null && !instance.getName().isEmpty()) {
-			entity.setName(instance.getName());
-		}else {
-			entity.setName("NONE");
-		}
-		if(instance.getActive()!= null) {
-			entity.setActive((boolean)instance.getActive());
-		}else {
-			entity.setActive(false);
-		}
-		if(instance.getCreatedTimestamp()!= null) {
-			
-		}
+		entity.setInstanceId(instance.getInstanceId().toString());
+		entity.setType(instance.getType());
+		entity.setName(instance.getName());
+		entity.setActive((boolean)instance.getActive());
 		entity.setCreatedTimestamp(instance.getCreatedTimestamp());
-		if(instance.getCreatedBy()!= null) {
-			String createdBy = instance.getCreatedBy().getUserId().getDomain() + "," 
-								+ instance.getCreatedBy().getUserId().getEmail();
-			entity.setCreatedBy(createdBy);
-		}else {
-			entity.setCreatedBy("NONE");
-		}
+		entity.setCreatedBy(instance.getCreatedBy().toString());
+		
 		if(instance.getLocation()!= null) {
-			entity.setLocation(instance.getLocation().toString());
-		}else {
-			entity.setLocation((new Location(0.0,0.0)).toString());
+			entity.setLat(instance.getLocation().getLat());
+			entity.setLng(instance.getLocation().getLng());
 		}
 		if (instance.getInstanceAttributes() != null) {
 			entity.setInstanceAttributes(
@@ -91,15 +66,11 @@ public class InstancesConverter {
 		boundary.setActive(entity.getActive());
 		boundary.setCreatedTimestamp(entity.getCreatedTimestamp());
 		
-		if(!entity.getCreatedBy().equals("NONE")) {
-			String[] splittedCreatedBy = entity.getCreatedBy().split(",");
-			CreatedBy createdBy = new CreatedBy(new UserID(splittedCreatedBy[0], splittedCreatedBy[1]));
-			boundary.setCreatedBy(createdBy);
-		}
+		String[] splittedCreatedBy = entity.getCreatedBy().split("_");
+		CreatedBy createdBy = new CreatedBy(new UserID(splittedCreatedBy[0], splittedCreatedBy[1]));
+		boundary.setCreatedBy(createdBy);
 		
-		String[] splittedLocation = entity.getLocation().split("-");
-		Location location = new Location(Double.parseDouble(splittedLocation[0]),
-										Double.parseDouble(splittedLocation[1]));
+		Location location = new Location(entity.getLat(),entity.getLng());
 		boundary.setLocation(location);
 		
 		if (entity.getInstanceAttributes() != null) {

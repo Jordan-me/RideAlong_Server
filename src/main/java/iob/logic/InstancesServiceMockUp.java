@@ -83,10 +83,10 @@ public class InstancesServiceMockUp  implements InstancesService {
 			entity.setName(update.getName());			
 		}
 		
-		if (update.getLocation() != null) {
-			dirtyFlag = true;
-			entity.setLocation(update.getLocation().toString());
-		}
+//		if (update.getLocation() != null) {
+//			dirtyFlag = true;
+//			entity.setLocation(update.getLocation().toString());
+//		}
 		// store entity to DB if needed
 		if (dirtyFlag)
 			//The put method either updates the value or adds a new entry.

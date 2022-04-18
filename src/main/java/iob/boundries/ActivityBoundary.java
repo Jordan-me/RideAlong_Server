@@ -8,9 +8,9 @@ import java.util.Map;
 public class ActivityBoundary {
 	private ActivityId activityId;
 	private String type;
-	private InstanceId instance;
+	private Instance instance;
 	private Date createdTimestamp;
-	private CreatedBy createdBy;
+	private CreatedBy invokedBy;
 	private Map<String, Object> activityAttributes;
 	
 	public ActivityBoundary() {
@@ -20,15 +20,15 @@ public class ActivityBoundary {
 	public ActivityBoundary(
 			ActivityId activityId,
 			String type,
-			InstanceId instance,
+			Instance instance,
 			Date createdTimestamp,
-			CreatedBy createdBy, Map<String, Object> activityAttributes) 
+			CreatedBy invokedBy, Map<String, Object> activityAttributes) 
 	{
 		this.activityId = null;
 		this.type = type;
 		this.instance = instance;
 		this.createdTimestamp = createdTimestamp;
-		this.createdBy = createdBy;
+		this.invokedBy = invokedBy;
 //		this.activityAttributes = new HashMap<String, Object>();
 		this.activityAttributes = activityAttributes;
 	}
@@ -50,15 +50,14 @@ public class ActivityBoundary {
 	}
 
 
-	public InstanceId getInstance() {
+	public Instance getInstance() {
 		return instance;
 	}
 
 
-	public void setInstance(InstanceId instance) {
+	public void setInstance(Instance instance) {
 		this.instance = instance;
 	}
-
 
 	public Date getCreatedTimestamp() {
 		return createdTimestamp;
@@ -69,13 +68,13 @@ public class ActivityBoundary {
 	}
 
 
-	public CreatedBy getCreatedBy() {
-		return createdBy;
+	public CreatedBy getInvokedBy() {
+		return invokedBy;
 	}
 
 
-	public void setCreatedBy(CreatedBy createdBy) {
-		this.createdBy = createdBy;
+	public void setInvokedBy(CreatedBy invokedBy) {
+		this.invokedBy = invokedBy;
 	}
 
 

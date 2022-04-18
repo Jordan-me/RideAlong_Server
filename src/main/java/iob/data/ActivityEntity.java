@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 /*
  ACTIVITY_TABLE
@@ -75,7 +76,7 @@ public class ActivityEntity {
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
-
+	@Lob
 	@Column(name="ACTIVITY_ATTRIBUTES")
 	public String getActivityAttributes() {
 		return activityAttributes;

@@ -25,44 +25,34 @@ public class UsersConverter {
 
 	public UserEntity toEntity (UserBoundary boundary) {
 		UserEntity entity = new UserEntity();
-		if(boundary.getUserId().getEmail() != null) {
-			entity.setUserId(boundary.getUserId().toString().toLowerCase());
-		}
+		entity.setUserId(boundary.getUserId().toString());
 		entity.setRole(
 				toEntity
 				(boundary.getRole()));
+		entity.setAvatar(boundary.getAvatar());
+		entity.setUsername(boundary.getUsername());
 
-		if (boundary.getAvatar() != null && !boundary.getAvatar().isEmpty()) {
-			entity.setAvatar(boundary.getAvatar());
-		}else {
-			entity.setAvatar("NONE");
-		}
-		if (boundary.getUsername() !=null && !boundary.getUsername().isEmpty()){
-			entity.setUsername(boundary.getUsername());
-		}else {
-			entity.setUsername("NONE");
-		}
- 
 		return entity;
 	}
 
 	public UserRole toEntity (String boundaryRole) {
-		UserRole rv = UserRole.PLAYER;
-		if(boundaryRole != null) {
-			String strRole = boundaryRole.toUpperCase();
-			rv = UserRole.valueOf(strRole);				
-		}
-		return rv;
+		String strRole = boundaryRole.toUpperCase();
+	    for (UserRole rv : UserRole.values()) {
+	        if (rv.name().equalsIgnoreCase(strRole))
+	            return rv;
+	    }
+	    throw new RuntimeException("User's Role is not defined properly"); 
+
 
 	}
 	
 	public UserBoundary  toBoundary (UserEntity entity) {
 		
 		UserBoundary  boundary = new UserBoundary ();
-		String[] splittedUserID = entity.getUserId().toLowerCase().split("_");
+		String[] splittedUserID = entity.getUserId().split("_");
 		boundary.setUserId(new UserID(splittedUserID[0], splittedUserID[1]));
 		boundary.setUsername(entity.getUsername());
-		boundary.setRole(entity.getRole().name().toLowerCase());
+		boundary.setRole(entity.getRole().name().toUpperCase());
 		boundary.setAvatar(entity.getAvatar());
 		
 		return boundary;

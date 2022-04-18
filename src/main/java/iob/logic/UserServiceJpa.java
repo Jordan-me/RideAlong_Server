@@ -16,6 +16,7 @@ import iob.boundries.UserBoundary;
 import iob.boundries.UserID;
 import iob.data.UserEntity;
 import iob.data.UserRole;
+
 @Service
 public class UserServiceJpa implements UsersService{
 	private String domainName;
@@ -37,14 +38,15 @@ public class UserServiceJpa implements UsersService{
 	@Override
 	@Transactional//(readOnly = false)
 	public UserBoundary createUser(UserBoundary user) {
+		
 		if(user.getRole() == null || user.getRole().isEmpty()) {
-			user.setRole(UserRole.PLAYER.name());
+			throw new RuntimeException("User's role is not a defined");
 		}
 		if(user.getAvatar() == null || user.getAvatar().isEmpty() ) {
-			user.setAvatar("None");
+			throw new RuntimeException("User's avatar is not a defined");
 		}
 		if(user.getUsername() == null || user.getUsername().isEmpty() ) {
-			user.setUsername("Default Username");
+			throw new RuntimeException("Username is not a defined");
 		}
 		// convert NewUserBoundary to entity
 		UserEntity entity = this.userConverter.toEntity(user);
@@ -55,7 +57,8 @@ public class UserServiceJpa implements UsersService{
 		// convert entity to UserBoundary and return it
 		return this.userConverter.toBoundary(entity);
 	}
-	private UserEntity getUserEntityById(UserID userId) {
+	@Transactional(readOnly = true)
+	public UserEntity getUserEntityById(UserID userId) {
 		Iterable<UserEntity> iter = this.userCrud
 				.findAll();
 
