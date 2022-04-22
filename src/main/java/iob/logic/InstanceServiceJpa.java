@@ -10,17 +10,20 @@ import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import iob.boundries.InstanceBoundary;
 import iob.boundries.InstanceId;
 import iob.boundries.Location;
+import iob.boundries.UserID;
 import iob.data.InstanceEntity;
 import iob.data.UserEntity;
 import iob.data.UserRole;
 @Service
-public class InstanceServiceJpa implements InstancesService{
+public class InstanceServiceJpa implements ExtendedInstancesService{
 	private String domainName;
 	private InstancesConverter instancesConverter;
 	private InstanceCrud instanceCrud;
@@ -64,7 +67,7 @@ public class InstanceServiceJpa implements InstancesService{
 		}
 		String userId = instance.getCreatedBy().getUserId().toString();
 		// Get user data from DB and check if MANAGER
-		this.usersService.checkUserPermission(userId, UserRole.MANAGER);
+		this.usersService.checkUserPermission(userId, UserRole.MANAGER,true);
 		
 		InstanceEntity entity = this.instancesConverter.toEntity(instance);
 		entity = this.instanceCrud.save(entity);
@@ -92,8 +95,9 @@ public class InstanceServiceJpa implements InstancesService{
 			boundary.setActive(update.getActive());
 
 		if (update.getCreatedBy() != null) 
-			boundary.setCreatedBy(update.getCreatedBy());
-
+			//do nothing
+		if (update.getCreatedTimestamp() != null) 
+			// do nothing
 		if (update.getLocation() != null) 
 			boundary.setLocation(update.getLocation());
 		
@@ -117,19 +121,58 @@ public class InstanceServiceJpa implements InstancesService{
 			InstanceEntity entity = op.get();
 			return instancesConverter.toBoundary(entity);
 		}else {
-//			throw new InstanceNotFoundException("instance");
-			throw new UserNotFoundException("could not find instance by id: " + instanceId.toString());
+			throw new InstanceNotFoundException("could not find instance by id: " + instanceId.toString());
 		}
+
+	}
+	
+	@Override
+	public InstanceBoundary getSpecificInstance(String userDomain, String userEmail, String instanceDomain,
+			String instanceId) {
+		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.ADMIN,false)) {
+			throw new RuntimeException("Access denied");
+		}
+		InstanceBoundary boundary = this.getSpecificInstance(instanceDomain, instanceId);
+		// Get user data from DB and check if MANAGER or PLAYER
+		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.PLAYER,false)
+				&& !boundary.getActive()) {
+			throw new InstanceNotFoundException("could not find instance by id: " + instanceId.toString());
+			
+		}
+		return boundary;
 	}
 
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated
 	public List<InstanceBoundary> getAllInstances() {
-		return StreamSupport.stream(this.instanceCrud.findAll().spliterator(), false)
-				.map(this.instancesConverter::toBoundary)
-				.collect(Collectors.toList());
+//		return StreamSupport.stream(this.instanceCrud.findAll().spliterator(), false)
+//				.map(this.instancesConverter::toBoundary)
+//				.collect(Collectors.toList());
+		throw new RuntimeException("getAllInstances is deprecated.");
 	}
-
+	@Override
+	@Transactional(readOnly = true)
+	public List<InstanceBoundary> getAllInstances(String userDomain, String userEmail, int size, int page) {
+		// Get user data from DB and check if MANAGER or PLAYER
+		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.MANAGER,false)) {
+			//manager access- return all instances, include not actives
+			return this.instanceCrud.findAll(PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId"))
+			.stream() // Stream<instanceEntity>
+			.map(this.instancesConverter::toBoundary) // Stream<instancetoBoundary>
+			.collect(Collectors.toList()); // List<instancetoBoundary>
+		}
+		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.PLAYER,false)) {
+			//player access- return all instances, include not actives
+			return this.instanceCrud.findAllByActive(true, PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId"))
+			.stream() // Stream<instanceEntity>
+			.map(this.instancesConverter::toBoundary) // Stream<instancetoBoundary>
+			.collect(Collectors.toList()); // List<instancetoBoundary>
+		}
+		throw new RuntimeException("Access denied");
+		
+		
+	}
 	@Override
 	@Transactional
 	public void deleteAllInstances() {
@@ -137,7 +180,8 @@ public class InstanceServiceJpa implements InstancesService{
 
 		
 	}
-	
+
+
 	
 
 }

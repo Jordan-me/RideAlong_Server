@@ -53,7 +53,7 @@ public class ActivitySrviceJpa implements ExtendedActivitiesService {
 
 		String userId = activity.getInvokedBy().getUserId().toString();
 		// Get user data from DB and check if PLAYER
-		this.usersService.checkUserPermission(userId, UserRole.PLAYER);
+		this.usersService.checkUserPermission(userId, UserRole.PLAYER,true);
 		
 		// Get user inctance from DB and check if active
 		String instanceId = activity.getInstance().getInstanceId().toString();

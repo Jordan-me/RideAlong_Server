@@ -55,7 +55,7 @@ public class AdminController {
 			@RequestParam(name="page", required = false, defaultValue = "0") int page
 			) {
 		// Get user data from DB and check if ADMIN
-		this.admin.checkUserPermission((new UserID(domain, email)).toString(), UserRole.ADMIN);
+		this.admin.checkUserPermission((new UserID(domain, email)).toString(), UserRole.ADMIN,true);
 		return activitiesService.getAllActivities(size,page).toArray(new ActivityBoundary[0]);
 	}
 	
@@ -70,7 +70,7 @@ public class AdminController {
 				@RequestParam(name="page", required = false, defaultValue = "0") int page
 				) {
 			//Get user data from DB and check if ADMIN
-			this.admin.checkUserPermission((new UserID(domain, email)).toString(), UserRole.ADMIN);
+			this.admin.checkUserPermission((new UserID(domain, email)).toString(), UserRole.ADMIN,true);
 			return this.admin.getAllUsers(size, page).toArray(new UserBoundary[0]);
 		}
 	
@@ -82,7 +82,7 @@ public class AdminController {
 			@RequestParam(name="userEmail", required = true) String email
 			) {
 		// Get user data from DB and check if ADMIN
-		this.admin.checkUserPermission((new UserID(domain, email)).toString(), UserRole.ADMIN);
+		this.admin.checkUserPermission((new UserID(domain, email)).toString(), UserRole.ADMIN,true);
 		admin.deleteAllUsers();
 	}
 	
@@ -95,7 +95,7 @@ public class AdminController {
 				@RequestParam(name="userEmail", required = true) String email
 				) {
 			// Get user data from DB and check if ADMIN
-			this.admin.checkUserPermission((new UserID(domain, email)).toString(), UserRole.ADMIN);
+			this.admin.checkUserPermission((new UserID(domain, email)).toString(), UserRole.ADMIN,true);
 			instancesService.deleteAllInstances();
 		}
 	
@@ -107,7 +107,7 @@ public class AdminController {
 			@RequestParam(name="userEmail", required = true) String email
 			) {
 		// Get user data from DB and check if ADMIN
-		this.admin.checkUserPermission((new UserID(domain, email)).toString(), UserRole.ADMIN);
+		this.admin.checkUserPermission((new UserID(domain, email)).toString(), UserRole.ADMIN,true);
 		activitiesService.deleteAllActivities();
 	}
 	

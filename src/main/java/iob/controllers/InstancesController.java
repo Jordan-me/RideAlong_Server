@@ -18,25 +18,36 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import iob.boundries.*;
+import iob.data.UserRole;
 import iob.logic.ActivitiesService;
+import iob.logic.ExtendedInstancesService;
+import iob.logic.ExtendedUserService;
 import iob.logic.InstancesService;
 import iob.logic.UsersService;
 
 @RestController
 public class InstancesController {
-	private InstancesService instancesService;
+	private ExtendedUserService manager;
+	private ExtendedInstancesService instancesService;
 	
 	@Autowired
-	public void setInstancesService(InstancesService instancesService) {
+	public void setInstancesService(ExtendedInstancesService instancesService) {
 		this.instancesService = instancesService;
 	}
-	
+	@Autowired
+	public void setUsersService(ExtendedUserService manager) {
+		this.manager = manager;
+	}
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path ="/iob/instances",
 			produces = MediaType.APPLICATION_JSON_VALUE)
-		public InstanceBoundary[] getAllInstances() {
-			return this.instancesService.getAllInstances()
+		public InstanceBoundary[] getAllInstances(
+				@RequestParam(name="userDomain", required = true) String userDomain,
+				@RequestParam(name="userEmail", required = true) String userEmail,
+				@RequestParam(name="size", required = false, defaultValue = "10") int size,
+				@RequestParam(name="page", required = false, defaultValue = "0") int page) {
+			return this.instancesService.getAllInstances(userDomain,userEmail,size,page)
 					.toArray(new InstanceBoundary[0]);
 		}
 	
@@ -45,9 +56,15 @@ public class InstancesController {
 			path = "/iob/instances/{instanceDomain}/{instanceId}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public InstanceBoundary getInstance(@PathVariable("instanceDomain") String domain,
-			@PathVariable("instanceId") String id) {
-		return this.instancesService.getSpecificInstance(domain,id);
+	public InstanceBoundary getInstance(
+			@PathVariable("instanceDomain") String instanceDomain,
+			@PathVariable("instanceId") String instanceId,
+			@RequestParam(name="userDomain", required = true) String userDomain,
+			@RequestParam(name="userEmail", required = true) String userEmail)
+	{
+		
+		return this.instancesService.getSpecificInstance(userDomain,userEmail,
+				instanceDomain,instanceId);
 		
 	}
 //	//TODO: implement getInstancesByName
@@ -108,11 +125,14 @@ public class InstancesController {
 			path = "/iob/instances/{instanceDomain}/{instanceId}",
 			method = RequestMethod.PUT,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void updateInstance(	 				   
-			 				   @PathVariable("instanceDomain") String intanceDomain,
-			 				   @PathVariable("instanceId") String instanceId,
-			 				   @RequestBody InstanceBoundary instanceBoundary) {
-		
+	public void updateInstance(
+			@PathVariable("instanceDomain") String intanceDomain,
+			@PathVariable("instanceId") String instanceId,
+			@RequestParam(name="userDomain", required = true) String userDomain,
+			@RequestParam(name="userEmail", required = true) String userEmail,
+			@RequestBody InstanceBoundary instanceBoundary) {
+		// Get user data from DB and check if ADMIN
+		this.manager.checkUserPermission((new UserID(userDomain, userEmail)).toString(), UserRole.MANAGER,true);
 		this.instancesService.updateInstance(intanceDomain,instanceId,instanceBoundary);
 	}
 	 

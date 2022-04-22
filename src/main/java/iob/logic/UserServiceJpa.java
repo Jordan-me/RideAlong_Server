@@ -133,11 +133,16 @@ public class UserServiceJpa implements ExtendedUserService{
 	}
 	
 	@Override
-	public void checkUserPermission(String userId, UserRole role) {
+	public boolean checkUserPermission(String userId, UserRole role,boolean throwable) {
+		/*boolean throwable- if not permit throw exception or not*/
 		UserEntity userEntity = this.userCrud.findById(userId)
 				.orElseThrow(()->
 				new UserNotFoundException("Could not find user " + userId));
-		if (!userEntity.getRole().equals(role))
+		if (userEntity.getRole().equals(role))
+			return true;
+		else if(throwable)
 			throw new RuntimeException("User's role is not a " + role.name());
+		return false;
 	}
+
 }
