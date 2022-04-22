@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import iob.boundries.InstanceBoundary;
 import iob.boundries.InstanceId;
+import iob.boundries.Location;
 import iob.data.InstanceEntity;
 import iob.data.UserEntity;
 import iob.data.UserRole;
@@ -23,7 +24,7 @@ public class InstanceServiceJpa implements InstancesService{
 	private String domainName;
 	private InstancesConverter instancesConverter;
 	private InstanceCrud instanceCrud;
-	private UserCrud usersCrud;
+	private ExtendedUserService usersService;
 	
 	@Value("${spring.application.name}")
 	public void setDomainName(String domainName) {
@@ -33,10 +34,10 @@ public class InstanceServiceJpa implements InstancesService{
 	public InstanceServiceJpa(
 			InstanceCrud instanceCrud,
 			InstancesConverter instancesConverter,
-			UserCrud usersCrud) {
+			ExtendedUserService usersService) {
 		this.instanceCrud = instanceCrud;
 		this.instancesConverter = instancesConverter;
-		this.usersCrud = usersCrud;
+		this.usersService = usersService;
 	}
 
 	@Override
@@ -55,13 +56,15 @@ public class InstanceServiceJpa implements InstancesService{
 		}
 		instance.setCreatedTimestamp(new Date());
 		
+		if(instance.getCreatedBy() == null || instance.getCreatedBy().getUserId().toString().isEmpty()) {
+			throw new RuntimeException("createdBy field is not defined");
+		}
+		if(instance.getLocation() == null) {
+			instance.setLocation(new Location(0.0,0.0));
+		}
 		String userId = instance.getCreatedBy().getUserId().toString();
 		// Get user data from DB and check if MANAGER
-		UserEntity userEntity = this.usersCrud.findById(userId)
-				.orElseThrow(()->
-				new UserNotFoundException("Could not find user " + userId));
-		if (!userEntity.getRole().equals(UserRole.MANAGER))
-			throw new RuntimeException("User's role is not a Manager");
+		this.usersService.checkUserPermission(userId, UserRole.MANAGER);
 		
 		InstanceEntity entity = this.instancesConverter.toEntity(instance);
 		entity = this.instanceCrud.save(entity);
@@ -73,34 +76,34 @@ public class InstanceServiceJpa implements InstancesService{
 	public InstanceBoundary updateInstance(String instanceDomain, String instanceId, InstanceBoundary update) {
 
 		// Get instance data from DB
-		InstanceBoundary entity = this.getSpecificInstance(instanceDomain, instanceId);
+		InstanceBoundary boundary = this.getSpecificInstance(instanceDomain, instanceId);
 
 		// Update instance details in DB
 		if (update.getInstanceId() != null) 
-			entity.setInstanceId(update.getInstanceId());
+			boundary.setInstanceId(update.getInstanceId());
 
 		if (update.getType() != null) 
-			entity.setType(update.getType());
+			boundary.setType(update.getType());
 
 		if (update.getName() != null) 
-			entity.setName(update.getName());
+			boundary.setName(update.getName());
 
 		if (update.getActive() != null) 
-			entity.setActive(update.getActive());
+			boundary.setActive(update.getActive());
 
 		if (update.getCreatedBy() != null) 
-			entity.setCreatedBy(update.getCreatedBy());
+			boundary.setCreatedBy(update.getCreatedBy());
 
 		if (update.getLocation() != null) 
-			entity.setLocation(update.getLocation());
+			boundary.setLocation(update.getLocation());
 		
 		if (update.getInstanceAttributes() != null) 
-			entity.setInstanceAttributes(update.getInstanceAttributes());
+			boundary.setInstanceAttributes(update.getInstanceAttributes());
 		// update DB
-		InstanceEntity instanceinEentity = this.instancesConverter.toEntity(entity);
-		instanceinEentity = this.instanceCrud.save(instanceinEentity);
+		InstanceEntity instanceEntity = this.instancesConverter.toEntity(boundary);
+		instanceEntity = this.instanceCrud.save(instanceEntity);
 
-		return this.instancesConverter.toBoundary(instanceinEentity);
+		return this.instancesConverter.toBoundary(instanceEntity);
 	}
 
 	@Override
@@ -114,6 +117,7 @@ public class InstanceServiceJpa implements InstancesService{
 			InstanceEntity entity = op.get();
 			return instancesConverter.toBoundary(entity);
 		}else {
+//			throw new InstanceNotFoundException("instance");
 			throw new UserNotFoundException("could not find instance by id: " + instanceId.toString());
 		}
 	}

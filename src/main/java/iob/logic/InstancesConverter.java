@@ -33,11 +33,9 @@ public class InstancesConverter {
 		entity.setActive((boolean)instance.getActive());
 		entity.setCreatedTimestamp(instance.getCreatedTimestamp());
 		entity.setCreatedBy(instance.getCreatedBy().toString());
+		entity.setLat(instance.getLocation().getLat());
+		entity.setLng(instance.getLocation().getLng());
 		
-		if(instance.getLocation()!= null) {
-			entity.setLat(instance.getLocation().getLat());
-			entity.setLng(instance.getLocation().getLng());
-		}
 		if (instance.getInstanceAttributes() != null) {
 			entity.setInstanceAttributes(
 			  this.toEntity(

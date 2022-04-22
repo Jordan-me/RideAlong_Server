@@ -18,7 +18,7 @@ import iob.data.UserEntity;
 import iob.data.UserRole;
 
 @Service
-public class UserServiceJpa implements UsersService{
+public class UserServiceJpa implements ExtendedUserService{
 	private String domainName;
 	private UserCrud userCrud;
 	private UsersConverter userConverter;
@@ -118,5 +118,13 @@ public class UserServiceJpa implements UsersService{
 		// TODO: Validate Admin Permissions
 		//TODO: Delete only non-admin users
 		this.userCrud.deleteAll();
+	}
+	@Override
+	public void checkUserPermission(String userId, UserRole role) {
+		UserEntity userEntity = this.userCrud.findById(userId)
+				.orElseThrow(()->
+				new UserNotFoundException("Could not find user " + userId));
+		if (!userEntity.getRole().equals(role))
+			throw new RuntimeException("User's role is not a " + role.name());
 	}
 }

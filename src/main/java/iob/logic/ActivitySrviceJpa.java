@@ -26,7 +26,7 @@ public class ActivitySrviceJpa implements ActivitiesService {
 	private String domainName;
 	private ActivitiesConverter activitiesConverter;
 	private ActivityCrud activityCrud;
-	private UserCrud usersCrud;
+	private ExtendedUserService usersService;
 	private InstanceCrud instancesCrud;
 	
 	@Value("${spring.application.name}")
@@ -37,11 +37,11 @@ public class ActivitySrviceJpa implements ActivitiesService {
 	public ActivitySrviceJpa(
 			ActivityCrud activityCrud,
 			ActivitiesConverter activitiesConverter,
-			UserCrud usersCrud,
+			UserCrud usersCrud,ExtendedUserService usersService,
 			InstanceCrud instancesCrud) {
 		this.activityCrud = activityCrud;
 		this.activitiesConverter = activitiesConverter;
-		this.usersCrud = usersCrud;
+		this.usersService = usersService;
 		this.instancesCrud = instancesCrud;
 	}
 
@@ -51,11 +51,7 @@ public class ActivitySrviceJpa implements ActivitiesService {
 
 		String userId = activity.getInvokedBy().getUserId().toString();
 		// Get user data from DB and check if PLAYER
-		UserEntity userEntity = this.usersCrud.findById(userId)
-				.orElseThrow(()->
-				new UserNotFoundException("Could not find user " + userId));
-		if (!userEntity.getRole().equals(UserRole.PLAYER))
-			throw new RuntimeException("User's role is not a player");
+		this.usersService.checkUserPermission(userId, UserRole.PLAYER);
 		
 		// Get user inctance from DB and check if active
 		String instanceId = activity.getInstance().getInstanceId().toString();
@@ -63,7 +59,7 @@ public class ActivitySrviceJpa implements ActivitiesService {
 				.orElseThrow(()->new RuntimeException("Could not find instance with id: " + instanceId));
 
 		if (instanceEntity.getActive() == false)
-			throw new RuntimeException("Instance is not active");
+			throw new InstanceNotFoundException("Instance is not active");
 		
 		// user is player and instance is active
 		activity.setActivityId(new ActivityId(this.domainName,UUID.randomUUID().toString()));
@@ -83,7 +79,6 @@ public class ActivitySrviceJpa implements ActivitiesService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ActivityBoundary> getAllActivities() {
-		//TODO: Validate Admin permissions
 		return StreamSupport.stream(this.activityCrud.findAll().spliterator(), false)
 				.map(this.activitiesConverter::toBoundary)
 				.collect(Collectors.toList());
@@ -94,7 +89,6 @@ public class ActivitySrviceJpa implements ActivitiesService {
 	@Override
 	@Transactional
 	public void deleteAllActivities() {
-		//TODO: Validate Admin permissions
 		this.activityCrud.deleteAll();
 		
 	}
