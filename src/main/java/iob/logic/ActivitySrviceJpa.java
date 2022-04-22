@@ -9,6 +9,8 @@ import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +24,7 @@ import iob.data.InstanceEntity;
 import iob.data.UserEntity;
 import iob.data.UserRole;
 @Service
-public class ActivitySrviceJpa implements ActivitiesService {
+public class ActivitySrviceJpa implements ExtendedActivitiesService {
 	private String domainName;
 	private ActivitiesConverter activitiesConverter;
 	private ActivityCrud activityCrud;
@@ -77,11 +79,12 @@ public class ActivitySrviceJpa implements ActivitiesService {
 	
 
 	@Override
-	@Transactional(readOnly = true)
+//	@Transactional(readOnly = true)
 	public List<ActivityBoundary> getAllActivities() {
-		return StreamSupport.stream(this.activityCrud.findAll().spliterator(), false)
-				.map(this.activitiesConverter::toBoundary)
-				.collect(Collectors.toList());
+//		return StreamSupport.stream(this.activityCrud.findAll().spliterator(), false)
+//				.map(this.activitiesConverter::toBoundary)
+//				.collect(Collectors.toList());
+		throw new RuntimeException("deprecated method - use getAllActivities with paginayion instead");
 	}
 
 
@@ -91,6 +94,14 @@ public class ActivitySrviceJpa implements ActivitiesService {
 	public void deleteAllActivities() {
 		this.activityCrud.deleteAll();
 		
+	}
+	@Override
+	public List<ActivityBoundary> getAllActivities(int size, int page) {
+		return this.activityCrud
+				.findAll(PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "activityId"))
+				.stream() // Stream<ActivityEntity>
+				.map(this.activitiesConverter::toBoundary) // Stream<ActivityBoundary>
+				.collect(Collectors.toList()); // List<ActivityBoundary>
 	}
 
 }

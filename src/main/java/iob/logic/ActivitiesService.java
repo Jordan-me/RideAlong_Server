@@ -8,6 +8,7 @@ public interface ActivitiesService {
 	
 	public Object invokeActivity(ActivityBoundary activity);
 	
+	@Deprecated
 	public List<ActivityBoundary> getAllActivities();
 	
 	public void deleteAllActivities();

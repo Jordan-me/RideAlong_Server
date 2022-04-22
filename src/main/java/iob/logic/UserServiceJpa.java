@@ -9,6 +9,8 @@ import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -104,12 +106,12 @@ public class UserServiceJpa implements ExtendedUserService{
  
 	}
 	@Override
-	@Transactional(readOnly = true)
+//	@Transactional(readOnly = true)
 	public List<UserBoundary> getAllUsers() {
-		//TODO: Validate Admin Permissions	
-		return StreamSupport.stream(this.userCrud.findAll().spliterator(), false)
-				.map(this.userConverter::toBoundary)
-				.collect(Collectors.toList());
+//		return StreamSupport.stream(this.userCrud.findAll().spliterator(), false)
+//				.map(this.userConverter::toBoundary)
+//				.collect(Collectors.toList());
+		throw new RuntimeException("deprecated method - use getAllUsers with paginayion instead");
 	}
 	
 	@Override
@@ -119,6 +121,17 @@ public class UserServiceJpa implements ExtendedUserService{
 		//TODO: Delete only non-admin users
 		this.userCrud.deleteAll();
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<UserBoundary> getAllUsers(int size, int page) {
+		return this.userCrud
+				.findAll(PageRequest.of(page, size, Direction.ASC, "role", "userId"))
+				.stream() // Stream<UserEntity>
+				.map(this.userConverter::toBoundary) // Stream<UserBoundary>
+				.collect(Collectors.toList()); // List<UserBoundary>
+	}
+	
 	@Override
 	public void checkUserPermission(String userId, UserRole role) {
 		UserEntity userEntity = this.userCrud.findById(userId)

@@ -18,6 +18,7 @@ import iob.boundries.*;
 import iob.data.UserEntity;
 import iob.data.UserRole;
 import iob.logic.ActivitiesService;
+import iob.logic.ExtendedActivitiesService;
 import iob.logic.ExtendedUserService;
 import iob.logic.InstancesService;
 import iob.logic.UserNotFoundException;
@@ -28,10 +29,10 @@ import iob.logic.UsersService;
 public class AdminController {
 	private ExtendedUserService admin;
 	private InstancesService instancesService;
-	private ActivitiesService activitiesService;
+	private ExtendedActivitiesService activitiesService;
 	
 	@Autowired
-	public void ActivitiesService(ActivitiesService activitiesService) {
+	public void ActivitiesService(ExtendedActivitiesService activitiesService) {
 		this.activitiesService = activitiesService;
 	}
 	@Autowired
@@ -47,17 +48,30 @@ public class AdminController {
 			method = RequestMethod.GET,
 			path ="/iob/admin/activities",
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ActivityBoundary[] getAllActivities() {
-		return activitiesService.getAllActivities().toArray(new ActivityBoundary[0]);
+	public ActivityBoundary[] getAllActivities(
+			@RequestParam(name="userDomain", required = true) String domain,
+			@RequestParam(name="userEmail", required = true) String email,
+			@RequestParam(name="size", required = false, defaultValue = "10") int size,
+			@RequestParam(name="page", required = false, defaultValue = "0") int page
+			) {
+		// Get user data from DB and check if ADMIN
+		this.admin.checkUserPermission((new UserID(domain, email)).toString(), UserRole.ADMIN);
+		return activitiesService.getAllActivities(size,page).toArray(new ActivityBoundary[0]);
 	}
 	
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path ="/iob/admin/users",
 			produces = MediaType.APPLICATION_JSON_VALUE)
-		public UserBoundary[] getAllUsers() {
-			return admin.getAllUsers().toArray(new UserBoundary[0]);
-
+		public UserBoundary[] getAllUsers(
+				@RequestParam(name="userDomain", required = true) String domain,
+				@RequestParam(name="userEmail", required = true) String email,
+				@RequestParam(name="size", required = false, defaultValue = "10") int size,
+				@RequestParam(name="page", required = false, defaultValue = "0") int page
+				) {
+			//Get user data from DB and check if ADMIN
+			this.admin.checkUserPermission((new UserID(domain, email)).toString(), UserRole.ADMIN);
+			return this.admin.getAllUsers(size, page).toArray(new UserBoundary[0]);
 		}
 	
 	@RequestMapping(
