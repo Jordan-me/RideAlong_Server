@@ -13,4 +13,8 @@ public interface InstanceCrud extends PagingAndSortingRepository<InstanceEntity,
 	public List<InstanceEntity> findAllByActive(
 			@Param("active") boolean active, 
 			Pageable pageable);
+	
+	public List<InstanceEntity> findAllByName(
+			@Param("name") String name,
+			Pageable pageable);
 }

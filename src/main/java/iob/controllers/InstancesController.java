@@ -8,6 +8,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.assertj.core.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ import iob.data.UserRole;
 import iob.logic.ActivitiesService;
 import iob.logic.ExtendedInstancesService;
 import iob.logic.ExtendedUserService;
+import iob.logic.InstanceNotFoundException;
 import iob.logic.InstancesService;
 import iob.logic.UsersService;
 
@@ -67,23 +69,27 @@ public class InstancesController {
 				instanceDomain,instanceId);
 		
 	}
-//	//TODO: implement getInstancesByName
-//	@RequestMapping(
-//			method = RequestMethod.GET,
-//			path ="/iob/instances/search/byName/{name}",
-//			produces = MediaType.APPLICATION_JSON_VALUE)
-//	public InstanceBoundary[] getInstancesByName(
-//			@PathVariable("name") String instanceName,
-//			@RequestParam(name="userDomain", required = true) String domain,
-//			@RequestParam(name="userEmail", required = true) String email,
-//			@RequestParam(name="size", required = false, defaultValue = "10") int size,
-//			@RequestParam(name="page", required = false, defaultValue = "0") int page) {
-//		return this.instancesService.getAllInstances()
-//				.toArray(new InstanceBoundary[0]);
-//	}
+	//TODO: implement getInstancesByName
+	@RequestMapping(
+			method = RequestMethod.GET,
+			path ="/iob/instances/search/byName/{name}",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public InstanceBoundary[] getInstancesByName(
+			@PathVariable("name") String instanceName,
+			@RequestParam(name="userDomain", required = true) String userDomain,
+			@RequestParam(name="userEmail", required = true) String userEmail,
+			@RequestParam(name="size", required = false, defaultValue = "10") int size,
+			@RequestParam(name="page", required = false, defaultValue = "0") int page) {
+		InstanceBoundary[] instances = this.instancesService.getInstancesByName(userDomain,userEmail,instanceName,
+				size, page).toArray(new InstanceBoundary[0]);
+		if(Arrays.isNullOrEmpty(instances))
+			throw new InstanceNotFoundException("could not find instances with name-" + instanceName);
+		return instances;
+	}
 //	//TODO: implement getInstancesByType
+
 //	@RequestMapping(
-//			method = RequestMethod.GET,
+ //			method = RequestMethod.GET,
 //			path ="/iob/instances/search/byType/{type}",
 //			produces = MediaType.APPLICATION_JSON_VALUE)
 //		public InstanceBoundary[] getInstancesByType(
