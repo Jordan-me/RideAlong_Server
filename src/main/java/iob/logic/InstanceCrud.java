@@ -2,6 +2,7 @@ package iob.logic;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 //import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -16,5 +17,9 @@ public interface InstanceCrud extends PagingAndSortingRepository<InstanceEntity,
 	
 	public List<InstanceEntity> findAllByName(
 			@Param("name") String name,
+			Pageable pageable);
+
+	public List<InstanceEntity> findAllByType(
+			@Param("type") String instanceType,
 			Pageable pageable);
 }

@@ -194,12 +194,54 @@ public class InstanceServiceJpa implements ExtendedInstancesService{
 	}
 	
 	@Override
+	public List<InstanceBoundary> getInstancesByType(String userDomain, String userEmail,
+			String instanceType, int size,int page) {
+		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.ADMIN,false)) {
+			throw new RuntimeException("Access denied");
+		}
+		List<InstanceEntity> instancesList = this.instanceCrud.findAllByType(instanceType, PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId"));
+		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.PLAYER,false)) {
+			return instancesList
+					.stream()
+					.filter(o -> o.getActive())
+					.map(this.instancesConverter::toBoundary)
+					.collect(Collectors.toList());
+		}
+		
+		return instancesList.stream().map(this.instancesConverter::toBoundary)
+				.collect(Collectors.toList());
+	}
+	
+	@Override
+	public List<InstanceBoundary> getInstancesByLocation(String userDomain, String userEmail, Location location,
+			double distance, int size, int page) {
+		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.ADMIN,false)) {
+			throw new RuntimeException("Access denied");
+		}
+		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.PLAYER,false)) {
+			 return this.instanceCrud
+				.findAll(PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId"))
+				.stream().filter(o -> o.getActive()).
+				filter(o -> (new Location(o.getLat(),o.getLng())).isInRange(location, distance))
+				.map(this.instancesConverter::toBoundary)
+				.collect(Collectors.toList());
+		}
+		 return this.instanceCrud
+			.findAll(PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId"))
+			.stream()
+			.filter(o -> (new Location(o.getLat(),o.getLng())).isInRange(location, distance))
+			.map(this.instancesConverter::toBoundary)
+			.collect(Collectors.toList());
+	}
+	@Override
 	@Transactional
 	public void deleteAllInstances() {
 		this.instanceCrud.deleteAll();
 
 		
 	}
+
+
 
 
 

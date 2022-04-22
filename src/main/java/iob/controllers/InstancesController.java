@@ -69,7 +69,7 @@ public class InstancesController {
 				instanceDomain,instanceId);
 		
 	}
-	//TODO: implement getInstancesByName
+	//Retrieve instances By Name
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path ="/iob/instances/search/byName/{name}",
@@ -83,41 +83,49 @@ public class InstancesController {
 		InstanceBoundary[] instances = this.instancesService.getInstancesByName(userDomain,userEmail,instanceName,
 				size, page).toArray(new InstanceBoundary[0]);
 		if(Arrays.isNullOrEmpty(instances))
-			throw new InstanceNotFoundException("could not find instances with name-" + instanceName);
+			throw new InstanceNotFoundException("could not find instances with name- " + instanceName);
 		return instances;
 	}
-//	//TODO: implement getInstancesByType
-
-//	@RequestMapping(
- //			method = RequestMethod.GET,
-//			path ="/iob/instances/search/byType/{type}",
-//			produces = MediaType.APPLICATION_JSON_VALUE)
-//		public InstanceBoundary[] getInstancesByType(
-//				@PathVariable("type") String instanceType,
-//				@RequestParam(name="userDomain", required = true) String domain,
-//				@RequestParam(name="userEmail", required = true) String email,
-//				@RequestParam(name="size", required = false, defaultValue = "10") int size,
-//				@RequestParam(name="page", required = false, defaultValue = "0") int page) {
-//			return this.instancesService.getAllInstances()
-//					.toArray(new InstanceBoundary[0]);
-//		}
-//	
-//	//TODO: implement getAInstancesByLocation
-//	@RequestMapping(
-//			method = RequestMethod.GET,
-//			path ="/iob/instances/search/near/{lat}/{lng}/{distance}",
-//			produces = MediaType.APPLICATION_JSON_VALUE)
-//		public InstanceBoundary[] getAInstancesByLocation(
-//				@PathVariable("lat") String lat,
-//				@PathVariable("lng") String lng,
-//				@PathVariable("distance") String distance,
-//				@RequestParam(name="userDomain", required = true) String domain,
-//				@RequestParam(name="userEmail", required = true) String email,
-//				@RequestParam(name="size", required = false, defaultValue = "10") int size,
-//				@RequestParam(name="page", required = false, defaultValue = "0") int page) {
-//			return this.instancesService.getAllInstances()
-//					.toArray(new InstanceBoundary[0]);
-//		}
+	
+	//Retrieve instances By Type
+	@RequestMapping(
+ 			method = RequestMethod.GET,
+			path ="/iob/instances/search/byType/{type}",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+		public InstanceBoundary[] getInstancesByType(
+				@PathVariable("type") String instanceType,
+				@RequestParam(name="userDomain", required = true) String userDomain,
+				@RequestParam(name="userEmail", required = true) String userEmail,
+				@RequestParam(name="size", required = false, defaultValue = "10") int size,
+				@RequestParam(name="page", required = false, defaultValue = "0") int page) {
+		InstanceBoundary[] instances = this.instancesService.getInstancesByType(userDomain,userEmail,instanceType,
+				size, page).toArray(new InstanceBoundary[0]);
+		if(Arrays.isNullOrEmpty(instances))
+			throw new InstanceNotFoundException("could not find instances with type- " + instanceType);
+		return instances;
+		}
+	
+	//TODO: implement getnstancesByLocation
+	@RequestMapping(
+			method = RequestMethod.GET,
+			path ="/iob/instances/search/near/{lat}/{lng}/{distance}",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+		public InstanceBoundary[] getAInstancesByLocation(
+				@PathVariable("lat") double lat,
+				@PathVariable("lng") double lng,
+				@PathVariable("distance") double distance,
+				@RequestParam(name="userDomain", required = true) String userDomain,
+				@RequestParam(name="userEmail", required = true) String userEmail,
+				@RequestParam(name="size", required = false, defaultValue = "10") int size,
+				@RequestParam(name="page", required = false, defaultValue = "0") int page) {
+		Location location = new Location(lat,lng);
+		InstanceBoundary[] instances = this.instancesService.getInstancesByLocation(userDomain,userEmail,
+				location,distance,size, page).toArray(new InstanceBoundary[0]);
+		if(Arrays.isNullOrEmpty(instances))
+			throw new InstanceNotFoundException("could not find instances near- " + location.toString());
+		return instances;
+		}		
+	
 	@RequestMapping(
 			method = RequestMethod.POST,
 			path = "/iob/instances",
