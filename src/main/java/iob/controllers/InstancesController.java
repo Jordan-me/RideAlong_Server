@@ -62,7 +62,7 @@ public class InstancesController {
 			@PathVariable("instanceDomain") String instanceDomain,
 			@PathVariable("instanceId") String instanceId,
 			@RequestParam(name="userDomain", required = true) String userDomain,
-			@RequestParam(name="userEmail", required = true) String userEmail)
+			@RequestParam(name="userEmail", required = true) String userEmail) throws InstanceNotFoundException
 	{
 		
 		return this.instancesService.getSpecificInstance(userDomain,userEmail,
@@ -79,7 +79,7 @@ public class InstancesController {
 			@RequestParam(name="userDomain", required = true) String userDomain,
 			@RequestParam(name="userEmail", required = true) String userEmail,
 			@RequestParam(name="size", required = false, defaultValue = "10") int size,
-			@RequestParam(name="page", required = false, defaultValue = "0") int page) {
+			@RequestParam(name="page", required = false, defaultValue = "0") int page) throws InstanceNotFoundException {
 		InstanceBoundary[] instances = this.instancesService.getInstancesByName(userDomain,userEmail,instanceName,
 				size, page).toArray(new InstanceBoundary[0]);
 		if(Arrays.isNullOrEmpty(instances))
@@ -97,7 +97,7 @@ public class InstancesController {
 				@RequestParam(name="userDomain", required = true) String userDomain,
 				@RequestParam(name="userEmail", required = true) String userEmail,
 				@RequestParam(name="size", required = false, defaultValue = "10") int size,
-				@RequestParam(name="page", required = false, defaultValue = "0") int page) {
+				@RequestParam(name="page", required = false, defaultValue = "0") int page) throws InstanceNotFoundException {
 		InstanceBoundary[] instances = this.instancesService.getInstancesByType(userDomain,userEmail,instanceType,
 				size, page).toArray(new InstanceBoundary[0]);
 		if(Arrays.isNullOrEmpty(instances))
@@ -117,7 +117,7 @@ public class InstancesController {
 				@RequestParam(name="userDomain", required = true) String userDomain,
 				@RequestParam(name="userEmail", required = true) String userEmail,
 				@RequestParam(name="size", required = false, defaultValue = "10") int size,
-				@RequestParam(name="page", required = false, defaultValue = "0") int page) {
+				@RequestParam(name="page", required = false, defaultValue = "0") int page) throws InstanceNotFoundException {
 		Location location = new Location(lat,lng);
 		InstanceBoundary[] instances = this.instancesService.getInstancesByLocation(userDomain,userEmail,
 				location,distance,size, page).toArray(new InstanceBoundary[0]);
@@ -144,7 +144,7 @@ public class InstancesController {
 			@PathVariable("instanceId") String instanceId,
 			@RequestParam(name="userDomain", required = true) String userDomain,
 			@RequestParam(name="userEmail", required = true) String userEmail,
-			@RequestBody InstanceBoundary instanceBoundary) {
+			@RequestBody InstanceBoundary instanceBoundary) throws InstanceNotFoundException {
 		// Get user data from DB and check if ADMIN
 		this.manager.checkUserPermission((new UserID(userDomain, userEmail)).toString(), UserRole.MANAGER,true);
 		this.instancesService.updateInstance(intanceDomain,instanceId,instanceBoundary);

@@ -76,7 +76,7 @@ public class InstanceServiceJpa implements ExtendedInstancesService{
 
 	@Override
 	@Transactional
-	public InstanceBoundary updateInstance(String instanceDomain, String instanceId, InstanceBoundary update) {
+	public InstanceBoundary updateInstance(String instanceDomain, String instanceId, InstanceBoundary update) throws InstanceNotFoundException {
 
 		// Get instance data from DB
 		InstanceBoundary boundary = this.getSpecificInstance(instanceDomain, instanceId);
@@ -112,7 +112,7 @@ public class InstanceServiceJpa implements ExtendedInstancesService{
 
 	@Override
 	@Transactional(readOnly = true)
-	public InstanceBoundary getSpecificInstance(String instanceDomain, String instanceId) {
+	public InstanceBoundary getSpecificInstance(String instanceDomain, String instanceId) throws InstanceNotFoundException {
 		InstanceId instanceIdToCheck = new InstanceId(instanceDomain, instanceId);
 		Optional<InstanceEntity> op = this.instanceCrud
 				.findById(instanceIdToCheck.toString());
@@ -128,7 +128,7 @@ public class InstanceServiceJpa implements ExtendedInstancesService{
 	
 	@Override
 	public InstanceBoundary getSpecificInstance(String userDomain, String userEmail, String instanceDomain,
-			String instanceId) {
+			String instanceId) throws InstanceNotFoundException {
 		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.ADMIN,false)) {
 			throw new RuntimeException("Access denied");
 		}

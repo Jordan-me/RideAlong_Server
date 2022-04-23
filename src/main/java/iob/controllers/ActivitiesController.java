@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import iob.boundries.*;
 import iob.logic.ActivitiesService;
+import iob.logic.InstanceNotFoundException;
 import iob.logic.InstancesService;
 
 @RestController
@@ -29,7 +30,7 @@ public class ActivitiesController {
 			method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ActivityBoundary createActivity (@RequestBody ActivityBoundary boundary) {
+	public ActivityBoundary createActivity (@RequestBody ActivityBoundary boundary) throws InstanceNotFoundException {
 
 		return (ActivityBoundary) this.activitiesService.invokeActivity(boundary);
 	}

@@ -49,7 +49,7 @@ public class ActivitySrviceJpa implements ExtendedActivitiesService {
 
 	@Override
 	@Transactional
-	public Object invokeActivity(ActivityBoundary activity) {
+	public Object invokeActivity(ActivityBoundary activity) throws InstanceNotFoundException {
 
 		String userId = activity.getInvokedBy().getUserId().toString();
 		// Get user data from DB and check if PLAYER

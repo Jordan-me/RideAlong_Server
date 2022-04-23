@@ -6,7 +6,7 @@ import iob.boundries.ActivityBoundary;
 
 public interface ActivitiesService {
 	
-	public Object invokeActivity(ActivityBoundary activity);
+	public Object invokeActivity(ActivityBoundary activity) throws InstanceNotFoundException;
 	
 	@Deprecated
 	public List<ActivityBoundary> getAllActivities();
