@@ -1,16 +1,20 @@
 package iob.data;
 
 import java.util.Date;
+//import javax.persistence.Column;
+//import javax.persistence.Entity;
+//import javax.persistence.Lob;
+//import javax.persistence.Table;
+//import javax.persistence.Temporal;
+//import javax.persistence.TemporalType;
+//import javax.validation.constraints.NotBlank;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import com.mongodb.lang.NonNull;
 
+import org.springframework.data.annotation.Id;
 
 
 /*
@@ -20,14 +24,20 @@ instanceId		| TYPE	  		| NAME 			 | ACTIVE 			| CREATED_TIME_STAMP | LOCATION	  
 VARCHAR(255)	| VARCHAR(255)	|	VARCHAR(255) |VARCHAR(255)		|VARCHAR(255)        |VARCHAR(255)|VARCHAR(255)| ???
 <PK>
 */
-@Entity
-@Table(name="INSTANCE_TABLE")
+//@Entity
+//@Table(name="INSTANCE_TABLE")
+@Document(collection = "Instances")
 public class InstanceEntity {
+	@Id
 	private String instanceId;
+	@NonNull
 	private String type;
+	@NonNull
 	private String name;
+	@NonNull
 	private boolean active;
 	private Date createdTimestamp;
+	@NonNull
 	private String createdBy;
 	private double lat;
 	private double lng;
@@ -45,7 +55,7 @@ public class InstanceEntity {
 		this.instanceId = instanceId;
 	}
 	
-	@Column(name = "TYPE")
+	@Field(name = "TYPE")
 	public String getType() {
 		return type;
 	}
@@ -54,7 +64,7 @@ public class InstanceEntity {
 		this.type = type;
 	}
 	
-	@Column(name = "NAME")
+	@Field(name = "NAME")
 	public String getName() {
 		return name;
 	}
@@ -64,7 +74,7 @@ public class InstanceEntity {
 	}
 	
 	
-	@Column(name = "ACTIVE")
+	@Field(name = "ACTIVE")
 	public boolean getActive() {
 		return active;
 	}
@@ -72,8 +82,7 @@ public class InstanceEntity {
 		this.active = active;
 	}
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="CREATED_TIME_STAMP")
+	@Field(name="CREATED_TIME_STAMP")
 	public Date getCreatedTimestamp() {
 		return createdTimestamp;
 	}
@@ -81,7 +90,7 @@ public class InstanceEntity {
 	public void setCreatedTimestamp(Date createdTimestamp) {
 		this.createdTimestamp = createdTimestamp;
 	}
-	@Column(name="LOCATION_lat")
+	@Field(name="LOCATION_lat")
 	public double getLat() {
 		return lat;
 	}
@@ -90,7 +99,7 @@ public class InstanceEntity {
 	public void setLat(double lat) {
 		this.lat = lat;
 	}
-	@Column(name="LOCATION_lng")
+	@Field(name="LOCATION_lng")
 	public double getLng() {
 		return lng;
 	}
@@ -100,7 +109,7 @@ public class InstanceEntity {
 		this.lng = lng;
 	}
 	
-	@Column(name="CREATED_BY")
+	@Field(name="CREATED_BY")
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -109,8 +118,7 @@ public class InstanceEntity {
 		this.createdBy = createdBy;
 	}
 	
-	@Lob
-	@Column(name="INSTANCE_ATTRIBUTES")
+	@Field(name="INSTANCE_ATTRIBUTES")
 	public String getInstanceAttributes() {
 		return instanceAttributes;
 	}

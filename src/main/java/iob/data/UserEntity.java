@@ -1,10 +1,16 @@
 package iob.data;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
-import javax.persistence.Column;
-import javax.persistence.Id;
+//import javax.persistence.Entity;
+//import javax.persistence.EnumType;
+//import javax.persistence.Enumerated;
+//import javax.persistence.Table;
+//import javax.validation.constraints.NotBlank;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.mongodb.lang.NonNull;
+
+//import javax.persistence.Column;
 
 /*
 USER_TABLE
@@ -17,12 +23,17 @@ VARCHAR(255)| VARCHAR(255)|	VARCHAR(255)	 |VARCHAR(255)			|VARCHAR(255)
 	private String username;
 	private String avatar;
 */
-@Entity
-@Table(name="USER_TABLE")
+//@Entity
+//@Table(name="USER_TABLE")
+@Document(collection = "Users")
 public class UserEntity {
+	@Id
 	private String userId;
+	@NonNull
 	private UserRole role;
+	@NonNull
 	private String username;
+	@NonNull
 	private String avatar;
 	
 	public UserEntity() {
@@ -36,7 +47,6 @@ public class UserEntity {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	@Enumerated(EnumType.STRING)
 	public UserRole getRole() {
 		return role;
 	}

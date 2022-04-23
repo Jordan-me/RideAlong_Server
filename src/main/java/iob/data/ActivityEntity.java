@@ -1,14 +1,17 @@
 package iob.data;
 
 import java.util.Date;
-import java.util.Map;
 
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+//import javax.persistence.Column;
+//import javax.persistence.Entity;
+//import javax.persistence.Lob;
+//import javax.persistence.Table;
+//import javax.persistence.Temporal;
+//import javax.persistence.TemporalType;
+//import javax.validation.constraints.NotBlank;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 /*
  ACTIVITY_TABLE
 ------------------------------
@@ -16,17 +19,22 @@ activityId		| TYPE	  		| INSTANCE_ID	 |CREATED_TIME_STAMP |CREATED_BY |ACTIVITY_
 VARCHAR(255)	| VARCHAR(255)	|	VARCHAR(255) |VARCHAR(255)       |???		 | ???
 <PK>
  */
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import org.springframework.data.mongodb.core.mapping.Field;
 
+import com.mongodb.lang.NonNull;  
 
-@Entity
-@Table(name="ACTIVITY_TABLE")
+@Document(collection = "Activities")
+//@Entity
+//@Table(name="ACTIVITY_TABLE")
 public class ActivityEntity {
+	@Id
 	private String activityId;
+	@NonNull
 	private String type;
+	@NonNull
 	private String instance;
 	private Date createdTimestamp;
+	@NonNull
 	private String createdBy;
 	private String activityAttributes;
 	
@@ -42,7 +50,7 @@ public class ActivityEntity {
 	public void setActivityId(String activityId) {
 		this.activityId = activityId;
 	}
-	@Column(name="TYPE")
+	@Field(name="TYPE")
 	public String getType() {
 		return type;
 	}
@@ -50,7 +58,7 @@ public class ActivityEntity {
 	public void setType(String type) {
 		this.type = type;
 	}
-	@Column(name="INSTANCE_ID")
+	@Field(name="INSTANCE_ID")
 	public String getInstance() {
 		return instance;
 	}
@@ -59,8 +67,7 @@ public class ActivityEntity {
 		this.instance = instance;
 	}
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="CREATED_TIME_STAMP")
+	@Field(name="CREATED_TIME_STAMP")
 	public Date getCreatedTimestamp() {
 		return createdTimestamp;
 	}
@@ -68,7 +75,7 @@ public class ActivityEntity {
 	public void setCreatedTimestamp(Date createdTimestamp) {
 		this.createdTimestamp = createdTimestamp;
 	}
-	@Column(name="CREATED_BY")
+	@Field(name="CREATED_BY")
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -76,8 +83,7 @@ public class ActivityEntity {
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
-	@Lob
-	@Column(name="ACTIVITY_ATTRIBUTES")
+	@Field(name="ACTIVITY_ATTRIBUTES")
 	public String getActivityAttributes() {
 		return activityAttributes;
 	}

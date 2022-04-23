@@ -1,14 +1,14 @@
 package iob.controllers;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+//import java.util.Arrays;
+//import java.util.Date;
+//import java.util.HashMap;
+//import java.util.Map;
+//import java.util.Random;
+//import java.util.UUID;
+//import java.util.stream.Collectors;
+//import java.util.stream.Stream;
 
-import org.assertj.core.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -82,7 +82,7 @@ public class InstancesController {
 			@RequestParam(name="page", required = false, defaultValue = "0") int page) throws InstanceNotFoundException {
 		InstanceBoundary[] instances = this.instancesService.getInstancesByName(userDomain,userEmail,instanceName,
 				size, page).toArray(new InstanceBoundary[0]);
-		if(Arrays.isNullOrEmpty(instances))
+		if(instances == null || instances.length == 0)
 			throw new InstanceNotFoundException("could not find instances with name- " + instanceName);
 		return instances;
 	}
@@ -100,12 +100,11 @@ public class InstancesController {
 				@RequestParam(name="page", required = false, defaultValue = "0") int page) throws InstanceNotFoundException {
 		InstanceBoundary[] instances = this.instancesService.getInstancesByType(userDomain,userEmail,instanceType,
 				size, page).toArray(new InstanceBoundary[0]);
-		if(Arrays.isNullOrEmpty(instances))
+		if(instances == null || instances.length == 0)
 			throw new InstanceNotFoundException("could not find instances with type- " + instanceType);
 		return instances;
 		}
 	
-	//TODO: implement getnstancesByLocation
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path ="/iob/instances/search/near/{lat}/{lng}/{distance}",
@@ -121,7 +120,7 @@ public class InstancesController {
 		Location location = new Location(lat,lng);
 		InstanceBoundary[] instances = this.instancesService.getInstancesByLocation(userDomain,userEmail,
 				location,distance,size, page).toArray(new InstanceBoundary[0]);
-		if(Arrays.isNullOrEmpty(instances))
+		if(instances == null || instances.length == 0)
 			throw new InstanceNotFoundException("could not find instances near- " + location.toString());
 		return instances;
 		}		

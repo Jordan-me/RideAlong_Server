@@ -1,8 +1,5 @@
 package iob.controllers;
 
-import java.util.Date;
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import iob.boundries.*;
 import iob.logic.ActivitiesService;
 import iob.logic.InstanceNotFoundException;
-import iob.logic.InstancesService;
 
 @RestController
 public class ActivitiesController {
