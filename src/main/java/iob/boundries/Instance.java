@@ -1,6 +1,8 @@
 package iob.boundries;
 
 public class Instance {
+
+
 	private InstanceId instanceId;
 
 	public Instance() {
@@ -17,5 +19,9 @@ public class Instance {
 
 	public void setInstanceId(InstanceId instanceId) {
 		this.instanceId = instanceId;
+	}
+	@Override
+	public String toString() {
+		return this.instanceId.toString();
 	}
 }

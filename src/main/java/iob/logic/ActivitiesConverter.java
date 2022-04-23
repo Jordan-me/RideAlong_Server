@@ -64,6 +64,7 @@ public class ActivitiesConverter {
 		boundary.setInvokedBy(createdBy);
 		
 		String[] splittedInstanceID = entity.getInstance().split("_");
+		System.err.println(splittedInstanceID.toString());
 		Instance instance = new Instance(new InstanceId(splittedInstanceID[0], splittedInstanceID[1]));
 		boundary.setInstance(instance);
 		if (entity.getActivityAttributes() != null) {
