@@ -1,7 +1,9 @@
 package iob.boundries;
 
+import java.util.Objects;
 
 public class UserID {
+
 	private String domain;
 	private String email;
 	
@@ -31,6 +33,23 @@ public class UserID {
 		this.email = email;
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(domain, email);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UserID other = (UserID) obj;
+		return this.domain.equals(other.domain) && this.email.equals(other.email);
+	}
+	
 	@Override
 	public String toString() {
 		return "" + this.domain + "_" + this.email;

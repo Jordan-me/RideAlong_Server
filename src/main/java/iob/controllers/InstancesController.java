@@ -74,7 +74,7 @@ public class InstancesController {
 			method = RequestMethod.GET,
 			path ="/iob/instances/search/byName/{name}",
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public InstanceBoundary[] getInstancesByName(
+	public InstanceBoundary[] getAllInstancesByName(
 			@PathVariable("name") String instanceName,
 			@RequestParam(name="userDomain", required = true) String userDomain,
 			@RequestParam(name="userEmail", required = true) String userEmail,
@@ -92,7 +92,7 @@ public class InstancesController {
  			method = RequestMethod.GET,
 			path ="/iob/instances/search/byType/{type}",
 			produces = MediaType.APPLICATION_JSON_VALUE)
-		public InstanceBoundary[] getInstancesByType(
+		public InstanceBoundary[] getAllInstancesByType(
 				@PathVariable("type") String instanceType,
 				@RequestParam(name="userDomain", required = true) String userDomain,
 				@RequestParam(name="userEmail", required = true) String userEmail,
@@ -109,7 +109,7 @@ public class InstancesController {
 			method = RequestMethod.GET,
 			path ="/iob/instances/search/near/{lat}/{lng}/{distance}",
 			produces = MediaType.APPLICATION_JSON_VALUE)
-		public InstanceBoundary[] getAInstancesByLocation(
+		public InstanceBoundary[] getAllInstancesByLocation(
 				@PathVariable("lat") double lat,
 				@PathVariable("lng") double lng,
 				@PathVariable("distance") double distance,
