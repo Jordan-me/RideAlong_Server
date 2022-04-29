@@ -25,7 +25,7 @@ import iob.boundries.NewUserBoundary;
 import iob.boundries.UserBoundary;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class ApplicationTests {
+public class ApplicationPaginationTests {
 	private int port;
 	private String url;
 	private RestTemplate restTemplate;
