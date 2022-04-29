@@ -30,9 +30,7 @@ import iob.boundries.InstanceId;
 import iob.boundries.Location;
 import iob.boundries.NewUserBoundary;
 import iob.boundries.UserID;
-import iob.controllers.ActivitiesController;
 import iob.data.InstanceEntity;
-import iob.logic.ExtendedActivitiesService;
 import iob.logic.InstanceNotFoundException;
 
 /*Tests: PostActivity*/
@@ -49,11 +47,6 @@ public class ActivitiesRepositoryTests {
 	}
     @Autowired
     private ServiceTest serviceTest;
-    @Autowired
-    private ExtendedActivitiesService activitiesService;
-    @Autowired
-    private ActivitiesController activitiesController;
-    
     private MongodExecutable mongodExecutable;
     private MongoTemplate mongoTemplate;
     
