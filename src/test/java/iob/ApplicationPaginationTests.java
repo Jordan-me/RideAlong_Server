@@ -8,6 +8,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +31,10 @@ public class ApplicationPaginationTests {
 	private String url;
 	private RestTemplate restTemplate;
 	private String domainName;
-	
+	@Value("${spring.application.name}")
+	public void setDomainName(String domainName) {
+		this.domainName = domainName;
+	}
 	@LocalServerPort
 	public void setPort(int port) {
 		this.port = port;
@@ -41,22 +45,7 @@ public class ApplicationPaginationTests {
 		this.url = "http://localhost:" + this.port;
 		this.restTemplate = new RestTemplate();
 	}
-	
-//	@AfterEach
-//	public void teardown() {
-//		this.restTemplate
-//			.delete(this.url);
-//	}
-	
-	@Value("${spring.application.name}")
-	public void setDomainName(String domainName) {
-		this.domainName = domainName;
-	}
-	
-	@Test
-	public void testContext() {
-	}
-	
+
 	@Test
 	@DisplayName("Test Pagination: export all users in the domain")
 	public void testGetAllUsersUsingPagination() {
@@ -65,19 +54,19 @@ public class ApplicationPaginationTests {
 		List<UserBoundary> addedUsers = new ArrayList<>();
 		UserBoundary adminUser = this.restTemplate
 				.postForObject(this.url+"/iob/users", 
-								new NewUserBoundary("admin@gmail.com", "Mark", "ADMIN", "M"), 
+								new NewUserBoundary(DeleteTests.ADMIN_MAIL, "Mark", "ADMIN", "M"), 
 								UserBoundary.class);
 			addedUsers.add(adminUser);
 			
 			UserBoundary managerUser = this.restTemplate
 				.postForObject(this.url+"/iob/users", 
-								new NewUserBoundary("manager@gmail.com", "Yarden", "MANAGER", "Y"), 
+								new NewUserBoundary(InstancesRepositoryTests.MANAGER_MAIL, "Yarden", "MANAGER", "Y"), 
 								UserBoundary.class);
 			addedUsers.add(managerUser);
 			
 			UserBoundary player1User = this.restTemplate
 				.postForObject(this.url+"/iob/users", 
-								new NewUserBoundary("player1@gmail.com", "Tzuf", "PLAYER", "T"), 
+								new NewUserBoundary(ActivitiesRepositoryTests.PLAYER_MAIL, "Tzuf", "PLAYER", "T"), 
 								UserBoundary.class);
 			addedUsers.add(player1User);
 			
@@ -95,7 +84,6 @@ public class ApplicationPaginationTests {
 			
 			// WHEN: the user requesting is an adim(role)
 			//		& I get all users in page: 0 , of size: 4
-			String adminEmail = "admin@gmail.com";
 			int size = 4;
 			int page = 0;
 			UserBoundary[] results = 
@@ -103,12 +91,10 @@ public class ApplicationPaginationTests {
 													+ "userDomain={adminDomain}&"
 													+ "userEmail={adminEmail}&"
 													+ "size={size}&page={page}",
-													UserBoundary[].class, this.domainName, adminEmail, size, page);
+													UserBoundary[].class, this.domainName, DeleteTests.ADMIN_MAIL, size, page);
 			// THEN: the server returns 4 users and not 5 [on indexies 0-3]
 			assertThat(results).
-			hasSize(size).
-			usingRecursiveFieldByFieldElementComparator().
-			isSubsetOf(addedUsers);
+			hasSize(size);
 
 	}
 
