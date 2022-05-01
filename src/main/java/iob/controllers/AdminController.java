@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,6 +45,7 @@ public class AdminController {
 		this.admin = admin;
 	}
 	
+	@CrossOrigin(origins = "http://localhost:3000")
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path ="/iob/admin/activities",
@@ -59,6 +61,7 @@ public class AdminController {
 		return activitiesService.getAllActivities(size,page).toArray(new ActivityBoundary[0]);
 	}
 	
+	@CrossOrigin(origins = "http://localhost:3000")
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path ="/iob/admin/users",
@@ -74,6 +77,7 @@ public class AdminController {
 			return this.admin.getAllUsers(size, page).toArray(new UserBoundary[0]);
 		}
 	
+	@CrossOrigin(origins = "http://localhost:3000")
 	@RequestMapping(
 			method = RequestMethod.DELETE,
 			path = "/iob/admin/users")
@@ -86,7 +90,7 @@ public class AdminController {
 		admin.deleteAllUsers();
 	}
 	
-	
+	@CrossOrigin(origins = "http://localhost:3000")
 	@RequestMapping(
 			method = RequestMethod.DELETE,
 			path = "/iob/admin/instances")
@@ -99,6 +103,7 @@ public class AdminController {
 			instancesService.deleteAllInstances();
 		}
 	
+	@CrossOrigin(origins = "http://localhost:3000")
 	@RequestMapping(
 			method = RequestMethod.DELETE,
 			path = "/iob/admin/activities")

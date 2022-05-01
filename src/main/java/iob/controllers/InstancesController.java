@@ -11,6 +11,7 @@ package iob.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +41,7 @@ public class InstancesController {
 	public void setUsersService(ExtendedUserService manager) {
 		this.manager = manager;
 	}
+	@CrossOrigin(origins = "http://localhost:3000")
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path ="/iob/instances",
@@ -54,6 +56,7 @@ public class InstancesController {
 		}
 	
 	// Retrieve instance
+	@CrossOrigin(origins = "http://localhost:3000")
 	@RequestMapping(
 			path = "/iob/instances/{instanceDomain}/{instanceId}",
 			method = RequestMethod.GET,
@@ -70,6 +73,7 @@ public class InstancesController {
 		
 	}
 	//Retrieve instances By Name
+	@CrossOrigin(origins = "http://localhost:3000")
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path ="/iob/instances/search/byName/{name}",
@@ -88,6 +92,7 @@ public class InstancesController {
 	}
 	
 	//Retrieve instances By Type
+	@CrossOrigin(origins = "http://localhost:3000")
 	@RequestMapping(
  			method = RequestMethod.GET,
 			path ="/iob/instances/search/byType/{type}",
@@ -105,6 +110,8 @@ public class InstancesController {
 		return instances;
 		}
 	
+	//Retrieve instances By Location
+	@CrossOrigin(origins = "http://localhost:3000")
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path ="/iob/instances/search/near/{lat}/{lng}/{distance}",
@@ -133,7 +140,9 @@ public class InstancesController {
 		public InstanceBoundary createInstance (@RequestBody InstanceBoundary boundary) {
 			return this.instancesService.createInstance(boundary);
 		}
+	
 	//update an instance
+	@CrossOrigin(origins = "http://localhost:3000")
 	@RequestMapping(
 			path = "/iob/instances/{instanceDomain}/{instanceId}",
 			method = RequestMethod.PUT,
