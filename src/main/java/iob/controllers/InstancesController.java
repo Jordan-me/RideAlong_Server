@@ -137,7 +137,12 @@ public class InstancesController {
 			path = "/iob/instances",
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-		public InstanceBoundary createInstance (@RequestBody InstanceBoundary boundary) {
+		public InstanceBoundary createInstance (
+				@RequestParam(name="userDomain", required = true) String userDomain,
+				@RequestParam(name="userEmail", required = true) String userEmail,
+				@RequestBody InstanceBoundary boundary) {
+		// Get user data from DB and check if MANAGER
+				this.manager.checkUserPermission((new UserID(userDomain, userEmail)).toString(), UserRole.MANAGER,true);
 			return this.instancesService.createInstance(boundary);
 		}
 	
@@ -153,7 +158,7 @@ public class InstancesController {
 			@RequestParam(name="userDomain", required = true) String userDomain,
 			@RequestParam(name="userEmail", required = true) String userEmail,
 			@RequestBody InstanceBoundary instanceBoundary) throws InstanceNotFoundException {
-		// Get user data from DB and check if ADMIN
+		// Get user data from DB and check if MANAGER
 		this.manager.checkUserPermission((new UserID(userDomain, userEmail)).toString(), UserRole.MANAGER,true);
 		this.instancesService.updateInstance(intanceDomain,instanceId,instanceBoundary);
 	}

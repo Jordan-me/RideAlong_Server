@@ -84,7 +84,7 @@ public class ActivitiesRepositoryTests {
     	serviceTest.insertUser(this.mongoTemplate,new NewUserBoundary(ActivitiesRepositoryTests.PLAYER_MAIL, "PLAYER", "PLAYER", "P"));
     	InstanceBoundary instance = new InstanceBoundary(null, "User", "idOfUser", true,null, new CreatedBy(
     			new UserID(this.domainName, InstancesRepositoryTests.MANAGER_MAIL)), new Location(10.50, 20.6), null);
-    	InstanceEntity in = serviceTest.insertInstance(this.mongoTemplate,instance);
+    	InstanceEntity in = serviceTest.insertInstance(this.mongoTemplate,instance,this.domainName, InstancesRepositoryTests.MANAGER_MAIL);
     	
     	// When create an activity
     	ActivityBoundary activity = new ActivityBoundary(null, "FindPartner",new Instance(serviceTest.getInstanceId(in)), null,
