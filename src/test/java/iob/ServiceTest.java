@@ -48,8 +48,8 @@ public class ServiceTest {
     	mongoTemplate.save(savedUser, "Users");
     	return savedUser;
     }
-    public InstanceEntity insertInstance( MongoTemplate mongoTemplate, InstanceBoundary instance,String domain, String mail) {
-		instance = this.instanceController.createInstance(domain,mail,instance);
+    public InstanceEntity insertInstance( MongoTemplate mongoTemplate, InstanceBoundary instance) {
+		instance = this.instanceController.createInstance(instance);
 		InstanceEntity savedInstance = this.instanceConverter.toEntity(instance);
 		mongoTemplate.save(savedInstance, "Instances");
 		return savedInstance;
@@ -82,10 +82,10 @@ public class ServiceTest {
 		this.insertUser(mongoTemplate, new NewUserBoundary(DeleteTests.ADMIN_MAIL, "Admin", "ADMIN", "A"));
 		InstanceBoundary instance = new InstanceBoundary(null, "User", "idOfUser", true,null, new CreatedBy(
     			new UserID(domain, InstancesRepositoryTests.MANAGER_MAIL)), new Location(10.50, 20.6), null);
-		this.insertInstance(mongoTemplate, instance,domain,InstancesRepositoryTests.MANAGER_MAIL);
+		this.insertInstance(mongoTemplate, instance);
 		InstanceBoundary instance2 = new InstanceBoundary(null, "User", "idOfUser", false,null, new CreatedBy(
     			new UserID(domain, InstancesRepositoryTests.MANAGER_MAIL)), new Location(10.50, 20.6), null);
-		this.insertInstance(mongoTemplate, instance2,domain,InstancesRepositoryTests.MANAGER_MAIL);
+		this.insertInstance(mongoTemplate, instance2);
 		ActivityBoundary activity = new ActivityBoundary(null, "FindPartner",new Instance(instance.getInstanceId()), null,
      			new CreatedBy(new UserID(domain, ActivitiesRepositoryTests.PLAYER_MAIL)), null);
 		this.insertActivity(mongoTemplate, activity);

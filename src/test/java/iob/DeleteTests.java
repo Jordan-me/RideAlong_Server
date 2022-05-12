@@ -88,7 +88,7 @@ public class DeleteTests {
     	serviceTest.insertUser(this.mongoTemplate,new NewUserBoundary(InstancesRepositoryTests.MANAGER_MAIL, "Manager", "Manager", "A"));
     	InstanceBoundary instance = new InstanceBoundary(null, "User", "idOfUser", true,null, new CreatedBy(
     			new UserID(this.domainName, InstancesRepositoryTests.MANAGER_MAIL)), new Location(10.50, 20.6), null);
-    	serviceTest.insertInstance(this.mongoTemplate,instance,this.domainName, InstancesRepositoryTests.MANAGER_MAIL);
+    	serviceTest.insertInstance(this.mongoTemplate,instance);
     	// When delete Instance's collection using MongoDB template
     	this.adminController.deleteAllInstances(this.domainName, DeleteTests.ADMIN_MAIL);
     	//Then Instance's collection is deleted
@@ -108,7 +108,7 @@ public class DeleteTests {
     	serviceTest.insertUser(this.mongoTemplate,new NewUserBoundary(ActivitiesRepositoryTests.PLAYER_MAIL, "PLAYER", "PLAYER", "P"));
     	InstanceBoundary instance = new InstanceBoundary(null, "User", "idOfUser", true,null, new CreatedBy(
     			new UserID(this.domainName, InstancesRepositoryTests.MANAGER_MAIL)), new Location(10.50, 20.6), null);
-    	InstanceEntity in = serviceTest.insertInstance(this.mongoTemplate,instance,this.domainName, InstancesRepositoryTests.MANAGER_MAIL);
+    	InstanceEntity in = serviceTest.insertInstance(this.mongoTemplate,instance);
     	
     	ActivityBoundary activity = new ActivityBoundary(null, "FindPartner",new Instance(serviceTest.getInstanceId(in)), null,
      			new CreatedBy(new UserID(this.domainName, ActivitiesRepositoryTests.PLAYER_MAIL)), null);

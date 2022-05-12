@@ -81,7 +81,7 @@ public class InstancesRepositoryTests {
     	InstanceBoundary instance = new InstanceBoundary(null, "User", "idOfUser", true,null, new CreatedBy(
     			new UserID(this.domainName, MANAGER_MAIL)), new Location(10.50, 20.6), null);
     	// When create an instance
-    	InstanceEntity savedInstance  = serviceTest.insertInstance(this.mongoTemplate,instance,this.domainName, MANAGER_MAIL);
+    	InstanceEntity savedInstance  = serviceTest.insertInstance(this.mongoTemplate,instance);
     	// Then it saved successfully
         assertThat(savedInstance.getInstanceId().toString()).isEqualTo(instance.getInstanceId().toString());
         assertThat(savedInstance.getActive()).isEqualTo(instance.getActive());
@@ -102,7 +102,7 @@ public class InstancesRepositoryTests {
     	int size = 10;
     	InstanceBoundary instance = new InstanceBoundary(null, "User", "idOfUser", true,null, new CreatedBy(
     			new UserID(this.domainName, MANAGER_MAIL)), new Location(10.50, 20.6), null);
-    	serviceTest.insertInstance(this.mongoTemplate,instance,domainName,MANAGER_MAIL);
+    	serviceTest.insertInstance(this.mongoTemplate,instance);
     	//When find by type "User"
     	InstanceBoundary[] instances = this.instanceController.getAllInstancesByType(instance.getType(),
     			this.domainName,MANAGER_MAIL,size,0);
@@ -121,7 +121,7 @@ public class InstancesRepositoryTests {
     	int size = 10;
     	InstanceBoundary instance = new InstanceBoundary(null, "User", "Eyal", true,null, new CreatedBy(
     			new UserID(this.domainName, MANAGER_MAIL)), new Location(8.50, 2.6), null);
-    	serviceTest.insertInstance(this.mongoTemplate,instance,domainName,MANAGER_MAIL);
+    	serviceTest.insertInstance(this.mongoTemplate,instance);
     	List<InstanceBoundary> instances = this.instancesService.getInstancesByName(this.domainName,MANAGER_MAIL,instance.getName(),size,0);
     	for(InstanceBoundary in: instances) {
             assertThat(in.getName()).isEqualTo(instance.getName());
@@ -137,7 +137,7 @@ public class InstancesRepositoryTests {
     	int radius = 5;
     	InstanceBoundary instance = new InstanceBoundary(null, "User", "idOfUser", true,null, new CreatedBy(
     			new UserID(this.domainName, MANAGER_MAIL)), new Location(5.1,5.2), null);
-    	serviceTest.insertInstance(this.mongoTemplate,instance,domainName,MANAGER_MAIL);
+    	serviceTest.insertInstance(this.mongoTemplate,instance);
     	List<InstanceBoundary> instances = this.instancesService.getInstancesByLocation(this.domainName,MANAGER_MAIL,instance.getLocation(),radius,size,0);
     	for(InstanceBoundary in: instances) {
             assertThat(in.getLocation().isInRange(instance.getLocation(), radius));
@@ -151,7 +151,7 @@ public class InstancesRepositoryTests {
     public void testUpdateInstance() throws InstanceNotFoundException {
     	InstanceBoundary instance = new InstanceBoundary(null, "User", "idOfUser", true,null, new CreatedBy(
     			new UserID(this.domainName, MANAGER_MAIL)), new Location(5.1,5.2), null);
-    	serviceTest.insertInstance(this.mongoTemplate,instance,domainName,MANAGER_MAIL);
+    	serviceTest.insertInstance(this.mongoTemplate,instance);
     	instance.setActive(false);
     	this.instanceController.updateInstance(instance.getInstanceId().getDomain(),
     			instance.getInstanceId().getId(), this.domainName, MANAGER_MAIL, instance);
