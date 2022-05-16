@@ -1,12 +1,5 @@
 package iob.controllers;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Random;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,21 +8,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import iob.boundries.*;
-import iob.data.UserEntity;
+import iob.boundries.ActivityBoundary;
+import iob.boundries.UserBoundary;
+import iob.boundries.UserID;
 import iob.data.UserRole;
-import iob.logic.ActivitiesService;
 import iob.logic.ExtendedActivitiesService;
+import iob.logic.ExtendedInstancesService;
 import iob.logic.ExtendedUserService;
-import iob.logic.InstancesService;
-import iob.logic.UserNotFoundException;
-import iob.logic.UsersService;
 
 
 @RestController
 public class AdminController {
 	private ExtendedUserService admin;
-	private InstancesService instancesService;
+	private ExtendedInstancesService instancesService;
 	private ExtendedActivitiesService activitiesService;
 	
 	@Autowired
@@ -37,7 +28,7 @@ public class AdminController {
 		this.activitiesService = activitiesService;
 	}
 	@Autowired
-	public void setInstancesService(InstancesService instancesService) {
+	public void setInstancesService(ExtendedInstancesService instancesService) {
 		this.instancesService = instancesService;
 	}
 	@Autowired
@@ -57,8 +48,7 @@ public class AdminController {
 			@RequestParam(name="page", required = false, defaultValue = "0") int page
 			) {
 		// Get user data from DB and check if ADMIN
-		this.admin.checkUserPermission((new UserID(domain, email)).toString(), UserRole.ADMIN,true);
-		return activitiesService.getAllActivities(size,page).toArray(new ActivityBoundary[0]);
+		return activitiesService.getAllActivities(new UserID(domain, email),UserRole.ADMIN,size,page).toArray(new ActivityBoundary[0]);
 	}
 	
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -73,8 +63,7 @@ public class AdminController {
 				@RequestParam(name="page", required = false, defaultValue = "0") int page
 				) {
 			//Get user data from DB and check if ADMIN
-			this.admin.checkUserPermission((new UserID(domain, email)).toString(), UserRole.ADMIN,true);
-			return this.admin.getAllUsers(size, page).toArray(new UserBoundary[0]);
+			return this.admin.getAllUsers(new UserID(domain, email),UserRole.ADMIN,size, page).toArray(new UserBoundary[0]);
 		}
 	
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -86,8 +75,7 @@ public class AdminController {
 			@RequestParam(name="userEmail", required = true) String email
 			) {
 		// Get user data from DB and check if ADMIN
-		this.admin.checkUserPermission((new UserID(domain, email)).toString(), UserRole.ADMIN,true);
-		admin.deleteAllUsers();
+		admin.deleteAllUsers(new UserID(domain, email), UserRole.ADMIN);
 	}
 	
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -99,8 +87,7 @@ public class AdminController {
 				@RequestParam(name="userEmail", required = true) String email
 				) {
 			// Get user data from DB and check if ADMIN
-			this.admin.checkUserPermission((new UserID(domain, email)).toString(), UserRole.ADMIN,true);
-			instancesService.deleteAllInstances();
+			instancesService.deleteAllInstances(new UserID(domain, email), UserRole.ADMIN);
 		}
 	
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -112,8 +99,7 @@ public class AdminController {
 			@RequestParam(name="userEmail", required = true) String email
 			) {
 		// Get user data from DB and check if ADMIN
-		this.admin.checkUserPermission((new UserID(domain, email)).toString(), UserRole.ADMIN,true);
-		activitiesService.deleteAllActivities();
+		activitiesService.deleteAllActivities(new UserID(domain, email), UserRole.ADMIN);
 	}
 	
 }

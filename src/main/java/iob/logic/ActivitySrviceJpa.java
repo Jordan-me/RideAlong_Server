@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import iob.boundries.ActivityBoundary;
 import iob.boundries.ActivityId;
+import iob.boundries.UserID;
 import iob.data.ActivityEntity;
 import iob.data.InstanceEntity;
 import iob.data.UserRole;
@@ -82,16 +83,23 @@ public class ActivitySrviceJpa implements ExtendedActivitiesService {
 
 	@Override
 	public void deleteAllActivities() {
-		this.activityCrud.deleteAll();
+		throw new RuntimeException("deprecated method - use deleteAllActivities with permission check instead");
 		
 	}
 	@Override
-	public List<ActivityBoundary> getAllActivities(int size, int page) {
+	public List<ActivityBoundary> getAllActivities(UserID userId,UserRole role ,int size, int page) {
+		this.usersService.checkUserPermission(userId.toString(), role,true);
 		return this.activityCrud
 				.findAll(PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "activityId"))
 				.stream() // Stream<ActivityEntity>
 				.map(this.activitiesConverter::toBoundary) // Stream<ActivityBoundary>
 				.collect(Collectors.toList()); // List<ActivityBoundary>
+	}
+	@Override
+	public void deleteAllActivities(UserID userId, UserRole role) {
+		this.usersService.checkUserPermission(userId.toString(), role,true);
+		this.activityCrud.deleteAll();
+		
 	}
 
 }

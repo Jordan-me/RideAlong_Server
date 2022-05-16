@@ -114,11 +114,14 @@ public class UserServiceJpa implements ExtendedUserService{
 	public void deleteAllUsers() {
 		// TODO: Validate Admin Permissions
 		//TODO: Delete only non-admin users
-		this.userCrud.deleteAll();
+		throw new RuntimeException("deprecated method - use deleteAllUsers with permission check instead");
+
+//		this.userCrud.deleteAll();
 	}
 	
 	@Override
-	public List<UserBoundary> getAllUsers(int size, int page) {
+	public List<UserBoundary> getAllUsers(UserID userId,UserRole role, int size, int page) {
+		this.checkUserPermission(userId.toString(), role,true);
 		return this.userCrud
 				.findAll(PageRequest.of(page, size, Direction.ASC, "role", "userId"))
 				.stream() // Stream<UserEntity>
@@ -137,6 +140,12 @@ public class UserServiceJpa implements ExtendedUserService{
 		else if(throwable)
 			throw new RuntimeException("User's role is not a " + role.name());
 		return false;
+	}
+	@Override
+	public void deleteAllUsers(UserID userId, UserRole role) {
+		this.checkUserPermission(userId.toString(), role,true);
+		this.userCrud.deleteAll();
+		
 	}
 
 }

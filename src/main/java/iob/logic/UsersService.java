@@ -15,6 +15,7 @@ public interface UsersService {
 	@Deprecated
 	public List<UserBoundary> getAllUsers();
 	
+	@Deprecated
 	public void deleteAllUsers();
 	
 }

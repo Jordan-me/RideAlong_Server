@@ -4,6 +4,8 @@ import java.util.List;
 
 import iob.boundries.InstanceBoundary;
 import iob.boundries.Location;
+import iob.boundries.UserID;
+import iob.data.UserRole;
 
 public interface ExtendedInstancesService extends InstancesService{
 
@@ -20,5 +22,7 @@ public interface ExtendedInstancesService extends InstancesService{
 
 	public List<InstanceBoundary> getInstancesByType(String userDomain, String userEmail, String instanceType, int size,
 			int page);
+	
+	public void deleteAllInstances(UserID userId,UserRole role);
 
 }

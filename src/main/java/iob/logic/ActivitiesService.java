@@ -10,6 +10,6 @@ public interface ActivitiesService {
 	
 	@Deprecated
 	public List<ActivityBoundary> getAllActivities();
-	
+	@Deprecated
 	public void deleteAllActivities();
 }

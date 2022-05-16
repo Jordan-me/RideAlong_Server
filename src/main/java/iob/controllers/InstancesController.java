@@ -30,17 +30,13 @@ import iob.logic.UsersService;
 
 @RestController
 public class InstancesController {
-	private ExtendedUserService manager;
 	private ExtendedInstancesService instancesService;
-	
+
 	@Autowired
 	public void setInstancesService(ExtendedInstancesService instancesService) {
 		this.instancesService = instancesService;
 	}
-	@Autowired
-	public void setUsersService(ExtendedUserService manager) {
-		this.manager = manager;
-	}
+
 	@CrossOrigin(origins = "http://localhost:3000")
 	@RequestMapping(
 			method = RequestMethod.GET,
@@ -86,8 +82,7 @@ public class InstancesController {
 			@RequestParam(name="page", required = false, defaultValue = "0") int page) throws InstanceNotFoundException {
 		InstanceBoundary[] instances = this.instancesService.getInstancesByName(userDomain,userEmail,instanceName,
 				size, page).toArray(new InstanceBoundary[0]);
-		if(instances == null || instances.length == 0)
-			throw new InstanceNotFoundException("could not find instances with name- " + instanceName);
+
 		return instances;
 	}
 	
@@ -105,8 +100,6 @@ public class InstancesController {
 				@RequestParam(name="page", required = false, defaultValue = "0") int page) throws InstanceNotFoundException {
 		InstanceBoundary[] instances = this.instancesService.getInstancesByType(userDomain,userEmail,instanceType,
 				size, page).toArray(new InstanceBoundary[0]);
-		if(instances == null || instances.length == 0)
-			throw new InstanceNotFoundException("could not find instances with type- " + instanceType);
 		return instances;
 		}
 	
@@ -127,8 +120,6 @@ public class InstancesController {
 		Location location = new Location(lat,lng);
 		InstanceBoundary[] instances = this.instancesService.getInstancesByLocation(userDomain,userEmail,
 				location,distance,size, page).toArray(new InstanceBoundary[0]);
-		if(instances == null || instances.length == 0)
-			throw new InstanceNotFoundException("could not find instances near- " + location.toString());
 		return instances;
 		}		
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -155,8 +146,8 @@ public class InstancesController {
 			@RequestParam(name="userEmail", required = true) String userEmail,
 			@RequestBody InstanceBoundary instanceBoundary) throws InstanceNotFoundException {
 		// Get user data from DB and check if MANAGER
-		this.manager.checkUserPermission((new UserID(userDomain, userEmail)).toString(), UserRole.MANAGER,true);
-		this.instancesService.updateInstance(intanceDomain,instanceId,instanceBoundary);
+//		this.manager.checkUserPermission((new UserID(userDomain, userEmail)).toString(), UserRole.MANAGER,true);
+		this.instancesService.updateInstance(new UserID(userDomain, userEmail),intanceDomain,instanceId,instanceBoundary);
 	}
 	 
 

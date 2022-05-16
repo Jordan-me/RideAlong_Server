@@ -74,8 +74,8 @@ public class InstanceServiceJpa implements ExtendedInstancesService{
 	}
 
 	@Override
-	public InstanceBoundary updateInstance(String instanceDomain, String instanceId, InstanceBoundary update) throws InstanceNotFoundException {
-
+	public InstanceBoundary updateInstance(UserID userId,String instanceDomain, String instanceId, InstanceBoundary update) throws InstanceNotFoundException {
+		this.usersService.checkUserPermission(userId.toString(), UserRole.MANAGER,true);
 		// Get instance data from DB
 		InstanceBoundary boundary = this.getSpecificInstance(instanceDomain, instanceId);
 
@@ -145,7 +145,7 @@ public class InstanceServiceJpa implements ExtendedInstancesService{
 //		return StreamSupport.stream(this.instanceCrud.findAll().spliterator(), false)
 //				.map(this.instancesConverter::toBoundary)
 //				.collect(Collectors.toList());
-		throw new RuntimeException("getAllInstances is deprecated.");
+		throw new RuntimeException("getAllInstances is deprecated use with pagination instead.");
 	}
 	@Override
 	public List<InstanceBoundary> getAllInstances(String userDomain, String userEmail, int size, int page) {
@@ -230,10 +230,15 @@ public class InstanceServiceJpa implements ExtendedInstancesService{
 	}
 	@Override
 	public void deleteAllInstances() {
-		this.instanceCrud.deleteAll();
+		throw new RuntimeException("getAllInstances is deprecated use with pagination instead.");
 
-		
 	}
+	@Override
+	public void deleteAllInstances(UserID userId, UserRole role) {
+		this.usersService.checkUserPermission(userId.toString(), role,true);	
+		this.instanceCrud.deleteAll();
+	}
+
 
 
 
