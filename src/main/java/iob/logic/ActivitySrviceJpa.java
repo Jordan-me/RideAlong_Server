@@ -2,26 +2,19 @@ package iob.logic;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import iob.boundries.ActivityBoundary;
 import iob.boundries.ActivityId;
-import iob.boundries.CreatedBy;
-import iob.boundries.InstanceId;
-import iob.boundries.UserID;
 import iob.data.ActivityEntity;
 import iob.data.InstanceEntity;
-import iob.data.UserEntity;
 import iob.data.UserRole;
 @Service
 public class ActivitySrviceJpa implements ExtendedActivitiesService {
@@ -48,7 +41,6 @@ public class ActivitySrviceJpa implements ExtendedActivitiesService {
 	}
 
 	@Override
-	@Transactional
 	public Object invokeActivity(ActivityBoundary activity) throws InstanceNotFoundException {
 
 		String userId = activity.getInvokedBy().getUserId().toString();
@@ -79,7 +71,6 @@ public class ActivitySrviceJpa implements ExtendedActivitiesService {
 	
 
 	@Override
-//	@Transactional(readOnly = true)
 	public List<ActivityBoundary> getAllActivities() {
 //		return StreamSupport.stream(this.activityCrud.findAll().spliterator(), false)
 //				.map(this.activitiesConverter::toBoundary)
@@ -90,7 +81,6 @@ public class ActivitySrviceJpa implements ExtendedActivitiesService {
 
 
 	@Override
-	@Transactional
 	public void deleteAllActivities() {
 		this.activityCrud.deleteAll();
 		

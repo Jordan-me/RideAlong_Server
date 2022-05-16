@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import iob.boundries.UserBoundary;
 import iob.boundries.UserID;
@@ -38,7 +38,6 @@ public class UserServiceJpa implements ExtendedUserService{
 	}
 
 	@Override
-	@Transactional//(readOnly = false)
 	public UserBoundary createUser(UserBoundary user) {
 		
 		if(user.getRole() == null || user.getRole().isEmpty()) {
@@ -59,7 +58,7 @@ public class UserServiceJpa implements ExtendedUserService{
 		// convert entity to UserBoundary and return it
 		return this.userConverter.toBoundary(entity);
 	}
-	@Transactional(readOnly = true)
+
 	public UserEntity getUserEntityById(UserID userId) {
 		Iterable<UserEntity> iter = this.userCrud
 				.findAll();
@@ -74,7 +73,6 @@ public class UserServiceJpa implements ExtendedUserService{
 	}
 	
 	@Override
-	@Transactional(readOnly = true)
 	public UserBoundary login(String userDomain, String userEmail) {
 		UserID userId = new UserID(userDomain, userEmail);
 		// Get user data from DB
@@ -83,7 +81,6 @@ public class UserServiceJpa implements ExtendedUserService{
 	}
 	
 	@Override
-	@Transactional
 	public UserBoundary updateUser(String userDomain, String userEmail, UserBoundary update) {
 		UserID userId = new UserID(userDomain, userEmail);
 		// Get user data from DB
@@ -106,7 +103,6 @@ public class UserServiceJpa implements ExtendedUserService{
  
 	}
 	@Override
-//	@Transactional(readOnly = true)
 	public List<UserBoundary> getAllUsers() {
 //		return StreamSupport.stream(this.userCrud.findAll().spliterator(), false)
 //				.map(this.userConverter::toBoundary)
@@ -115,7 +111,6 @@ public class UserServiceJpa implements ExtendedUserService{
 	}
 	
 	@Override
-	@Transactional
 	public void deleteAllUsers() {
 		// TODO: Validate Admin Permissions
 		//TODO: Delete only non-admin users
@@ -123,7 +118,6 @@ public class UserServiceJpa implements ExtendedUserService{
 	}
 	
 	@Override
-	@Transactional(readOnly = true)
 	public List<UserBoundary> getAllUsers(int size, int page) {
 		return this.userCrud
 				.findAll(PageRequest.of(page, size, Direction.ASC, "role", "userId"))
