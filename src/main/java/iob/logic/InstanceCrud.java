@@ -2,10 +2,9 @@ package iob.logic;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
-//import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import iob.data.InstanceEntity;
@@ -27,4 +26,9 @@ public interface InstanceCrud extends MongoRepository<InstanceEntity, String>{
 			@Param("active") boolean active, 
 			@Param("name") String name,
 			Pageable pageable);
+
+	public List<InstanceEntity> findAllByActiveAndType(
+			@Param("active") boolean active, 
+			@Param("type") String instanceType,
+			PageRequest pageable);
 }

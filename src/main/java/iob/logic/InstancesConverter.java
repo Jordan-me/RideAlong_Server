@@ -28,8 +28,9 @@ public class InstancesConverter {
 		entity.setActive((boolean)instance.getActive());
 		entity.setCreatedTimestamp(instance.getCreatedTimestamp());
 		entity.setCreatedBy(instance.getCreatedBy().toString());
-		entity.setLat(instance.getLocation().getLat());
-		entity.setLng(instance.getLocation().getLng());
+		entity.setLocation(instance.getLocation());
+//		entity.setLat(instance.getLocation().getLat());
+//		entity.setLng(instance.getLocation().getLng());
 		
 		if (instance.getInstanceAttributes() != null) {
 			entity.setInstanceAttributes(instance.getInstanceAttributes());
@@ -63,8 +64,8 @@ public class InstancesConverter {
 		CreatedBy createdBy = new CreatedBy(new UserID(splittedCreatedBy[0], splittedCreatedBy[1]));
 		boundary.setCreatedBy(createdBy);
 		
-		Location location = new Location(entity.getLat(),entity.getLng());
-		boundary.setLocation(location);
+//		Location location = new Location(entity.getLat(),entity.getLng());
+		boundary.setLocation(entity.getLocation());
 		
 		if (entity.getInstanceAttributes() != null) {
 			boundary.setInstanceAttributes(entity.getInstanceAttributes());

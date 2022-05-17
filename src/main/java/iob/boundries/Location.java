@@ -31,15 +31,15 @@ public class Location {
 		return lat + "-" + lng ;
 	}
 	//calculate by radius
-	public boolean isInRange(Location other, double distance) {
-		//distance formula
-		double d = Math.sqrt(Math.pow((this.lat - other.lat),2) + Math.pow((this.lng - other.lng),2));
-		if( d > distance) {
-			return false;
-		}
-		return true;
-	}	
-	
+//	public boolean isInRange(Location other, double distance) {
+//		//distance formula
+//		double d = Math.sqrt(Math.pow((this.lat - other.lat),2) + Math.pow((this.lng - other.lng),2));
+//		if( d > distance) {
+//			return false;
+//		}
+//		return true;
+//	}	
+//	
 	//calculate by square
 //	public boolean isInRange(Location other, double distance) {
 //		if (other.lat < this.lat - distance || other.lat > this.lat + distance) { // check if lat isn't in range

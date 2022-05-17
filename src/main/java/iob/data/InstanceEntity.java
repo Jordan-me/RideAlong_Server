@@ -15,6 +15,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import com.mongodb.lang.NonNull;
 
+import iob.boundries.Location;
+
 import org.springframework.data.annotation.Id;
 
 
@@ -40,8 +42,9 @@ public class InstanceEntity {
 	private Date createdTimestamp;
 	@NonNull
 	private String createdBy;
-	private double lat;
-	private double lng;
+	private Location location;
+//	private double lat;
+//	private double lng;
 	private Map<String, Object> instanceAttributes;
 	
 	public InstanceEntity() {
@@ -91,24 +94,34 @@ public class InstanceEntity {
 	public void setCreatedTimestamp(Date createdTimestamp) {
 		this.createdTimestamp = createdTimestamp;
 	}
-	@Field(name="LOCATION_lat")
-	public double getLat() {
-		return lat;
+	@Field(name="LOCATION")
+	public Location getLocation() {
+		return location;
 	}
 	
 	
-	public void setLat(double lat) {
-		this.lat = lat;
-	}
-	@Field(name="LOCATION_lng")
-	public double getLng() {
-		return lng;
+	public void setLocation(Location location) {
+		this.location = location;
 	}
 	
-	
-	public void setLng(double lng) {
-		this.lng = lng;
-	}
+//	@Field(name="LOCATION_lat")
+//	public double getLat() {
+//		return lat;
+//	}
+//	
+//	
+//	public void setLat(double lat) {
+//		this.lat = lat;
+//	}
+//	@Field(name="LOCATION_lng")
+//	public double getLng() {
+//		return lng;
+//	}
+//	
+//	
+//	public void setLng(double lng) {
+//		this.lng = lng;
+//	}
 	
 	@Field(name="CREATED_BY")
 	public String getCreatedBy() {
@@ -132,7 +145,8 @@ public class InstanceEntity {
 	@Override
 	public String toString() {
 		return "InstanceEntity [instanceId=" + instanceId + ", type=" + type + ", name=" + name + ", active=" + active
-				+ ", createdTimestamp=" + createdTimestamp + ", createdBy=" + createdBy + ", location=(" + lat + "," + lng + ")"
+				+ ", createdTimestamp=" + createdTimestamp + ", createdBy=" + createdBy +
+				", location=("+location.getLat()+ ", " +location.getLng()+ ")"
 				+ ", instanceAttributes=" + instanceAttributes + "]";
 	}
 

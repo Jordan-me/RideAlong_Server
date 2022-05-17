@@ -5,22 +5,25 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.geo.Circle;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Metrics;
+import org.springframework.data.geo.Point;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-
 
 import iob.boundries.InstanceBoundary;
 import iob.boundries.InstanceId;
 import iob.boundries.Location;
 import iob.boundries.UserID;
 import iob.data.InstanceEntity;
-import iob.data.UserEntity;
 import iob.data.UserRole;
 @Service
 public class InstanceServiceJpa implements ExtendedInstancesService{
@@ -28,6 +31,7 @@ public class InstanceServiceJpa implements ExtendedInstancesService{
 	private InstancesConverter instancesConverter;
 	private InstanceCrud instanceCrud;
 	private ExtendedUserService usersService;
+	private MongoOperations mongoOperations;
 	
 	@Value("${spring.application.name}")
 	public void setDomainName(String domainName) {
@@ -37,10 +41,12 @@ public class InstanceServiceJpa implements ExtendedInstancesService{
 	public InstanceServiceJpa(
 			InstanceCrud instanceCrud,
 			InstancesConverter instancesConverter,
-			ExtendedUserService usersService) {
+			ExtendedUserService usersService,
+			MongoOperations mongoOperations) {
 		this.instanceCrud = instanceCrud;
 		this.instancesConverter = instancesConverter;
 		this.usersService = usersService;
+		this.mongoOperations = mongoOperations;
 	}
 
 	@Override
@@ -184,17 +190,6 @@ public class InstanceServiceJpa implements ExtendedInstancesService{
 					.collect(Collectors.toList()); // List<instancetoBoundary>;
 			
 		}
-//		List<InstanceEntity> instancesList = this.instanceCrud.findAllByName(name, PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId"));
-//		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.PLAYER,false)) {
-//			return instancesList
-//					.stream()
-//					.filter(o -> o.getActive())
-//					.map(this.instancesConverter::toBoundary)
-//					.collect(Collectors.toList());
-//		}
-//		
-//		return instancesList.stream().map(this.instancesConverter::toBoundary)
-//				.collect(Collectors.toList());
 		return null;
 	}
 	
@@ -204,17 +199,21 @@ public class InstanceServiceJpa implements ExtendedInstancesService{
 		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.ADMIN,false)) {
 			throw new RuntimeException("Access denied");
 		}
-		List<InstanceEntity> instancesList = this.instanceCrud.findAllByType(instanceType, PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId"));
 		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.PLAYER,false)) {
-			return instancesList
-					.stream()
-					.filter(o -> o.getActive())
-					.map(this.instancesConverter::toBoundary)
-					.collect(Collectors.toList());
+			return this.instanceCrud.findAllByActiveAndType(true, instanceType,  PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId")
+					).stream()
+					.map(this.instancesConverter::toBoundary) // Stream<instancetoBoundary>
+					.collect(Collectors.toList()); // List<instancetoBoundary>;
 		}
-		
-		return instancesList.stream().map(this.instancesConverter::toBoundary)
-				.collect(Collectors.toList());
+		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.MANAGER,false)) {
+			return this.instanceCrud.findAllByType(instanceType,  PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId")
+					).stream()
+					.map(this.instancesConverter::toBoundary) // Stream<instancetoBoundary>
+					.collect(Collectors.toList()); // List<instancetoBoundary>;
+			
+		}
+		return null;
+
 	}
 	
 	@Override
@@ -223,20 +222,39 @@ public class InstanceServiceJpa implements ExtendedInstancesService{
 		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.ADMIN,false)) {
 			throw new RuntimeException("Access denied");
 		}
-		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.PLAYER,false)) {
-			 return this.instanceCrud
-				.findAll(PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId"))
-				.stream().filter(o -> o.getActive()).
-				filter(o -> (new Location(o.getLat(),o.getLng())).isInRange(location, distance))
+
+		Point basePoint = new Point(location.getLat(),location.getLng());
+		Distance radius = new Distance(distance,Metrics.MILES);
+		Circle area = new Circle(basePoint,radius);
+		
+		Query query = new Query();
+		query.addCriteria(Criteria.where("location").within(area));
+		
+		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail)
+				.toString(), UserRole.PLAYER,false)) {
+			query.addCriteria(Criteria.where("active").is(false));
+		}
+		return this.mongoOperations.find(query,InstanceEntity.class)
+				.stream()
 				.map(this.instancesConverter::toBoundary)
 				.collect(Collectors.toList());
-		}
-		 return this.instanceCrud
-			.findAll(PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId"))
-			.stream()
-			.filter(o -> (new Location(o.getLat(),o.getLng())).isInRange(location, distance))
-			.map(this.instancesConverter::toBoundary)
-			.collect(Collectors.toList());
+				
+		
+//		
+//		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.PLAYER,false)) {
+//			 return this.instanceCrud
+//				.findAll(PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId"))
+//				.stream().filter(o -> o.getActive()).
+//				filter(o -> (new Location(o.getLat(),o.getLng())).isInRange(location, distance))
+//				.map(this.instancesConverter::toBoundary)
+//				.collect(Collectors.toList());
+//		}
+//		 return this.instanceCrud
+//			.findAll(PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId"))
+//			.stream()
+//			.filter(o -> (new Location(o.getLat(),o.getLng())).isInRange(location, distance))
+//			.map(this.instancesConverter::toBoundary)
+//			.collect(Collectors.toList());
 	}
 	@Override
 	public void deleteAllInstances() {

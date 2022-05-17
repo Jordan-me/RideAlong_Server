@@ -88,8 +88,8 @@ public class InstancesRepositoryTests {
         assertThat(savedInstance.getCreatedBy()).isEqualTo(instance.getCreatedBy().toString());
         assertThat(savedInstance.getCreatedTimestamp()).isEqualTo(instance.getCreatedTimestamp());
         assertThat(savedInstance.getInstanceAttributes()).isEqualTo(instance.getInstanceAttributes());
-        assertThat(savedInstance.getLat()).isEqualTo(instance.getLocation().getLat());
-        assertThat(savedInstance.getLng()).isEqualTo(instance.getLocation().getLng());
+        assertThat(savedInstance.getLocation()).isEqualTo(instance.getLocation());
+//        assertThat(savedInstance.getLng()).isEqualTo(instance.getLocation().getLng());
         assertThat(savedInstance.getName()).isEqualTo(instance.getName());
         assertThat(savedInstance.getType()).isEqualTo(instance.getType());
     }
@@ -111,6 +111,29 @@ public class InstancesRepositoryTests {
             assertThat(in.getType()).isEqualTo(instance.getType());
     	}
 		assertThat(instances).isNotNull().hasSizeGreaterThanOrEqualTo(1);
+ 
+    }
+    @Test
+    @DisplayName("Given active & nonactive Instance in db & type = \"User\""
+            + " when search Instance using MongoDB template with player permission"
+            + " then only active Instance is found")
+    public void testFindInstanceByTypeForPlayer() throws InstanceNotFoundException {
+    	int size = 10;
+    	
+        serviceTest.insertUser(this.mongoTemplate,new NewUserBoundary(ActivitiesRepositoryTests.PLAYER_MAIL, "Player", "PLAYER", "P"));
+
+    	InstanceBoundary instance = new InstanceBoundary(null, "TypeCheckForPlayer", "CheckForPlayer", true,null, new CreatedBy(
+    			new UserID(this.domainName, MANAGER_MAIL)), new Location(8.50, 2.6), null);
+    	InstanceBoundary instance2 = new InstanceBoundary(null, "TypeCheckForPlayer", "CheckForPlayer", false,null, new CreatedBy(
+    			new UserID(this.domainName, MANAGER_MAIL)), new Location(8.50, 2.6), null);
+    	serviceTest.insertInstance(this.mongoTemplate,instance);
+    	serviceTest.insertInstance(this.mongoTemplate,instance2);
+    	List<InstanceBoundary> instances = this.instancesService.getInstancesByType(this.domainName,ActivitiesRepositoryTests.PLAYER_MAIL,instance.getType(),size,0);
+    	for(InstanceBoundary in: instances) {
+    		System.out.println(in.toString());
+            assertThat(in.getName()).isEqualTo(instance.getName());
+    	}
+    	assertThat(instances).isNotNull().hasSize(1);
  
     }
     @Test
@@ -158,12 +181,13 @@ public class InstancesRepositoryTests {
     	int size = 10;
     	int radius = 5;
     	InstanceBoundary instance = new InstanceBoundary(null, "User", "idOfUser", true,null, new CreatedBy(
-    			new UserID(this.domainName, MANAGER_MAIL)), new Location(5.1,5.2), null);
+    			new UserID(this.domainName, MANAGER_MAIL)),
+    			new Location(5.1,5.2), null);
     	serviceTest.insertInstance(this.mongoTemplate,instance);
-    	List<InstanceBoundary> instances = this.instancesService.getInstancesByLocation(this.domainName,MANAGER_MAIL,instance.getLocation(),radius,size,0);
-    	for(InstanceBoundary in: instances) {
-            assertThat(in.getLocation().isInRange(instance.getLocation(), radius));
-    	}
+    	List<InstanceBoundary> instances = this.instancesService.
+    			getInstancesByLocation(
+    			this.domainName,MANAGER_MAIL,instance.getLocation(),radius,size,0);
+
     	assertThat(instances).isNotNull().hasSizeGreaterThanOrEqualTo(1);
     }    
     @Test
