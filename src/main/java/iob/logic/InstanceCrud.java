@@ -22,4 +22,9 @@ public interface InstanceCrud extends MongoRepository<InstanceEntity, String>{
 	public List<InstanceEntity> findAllByType(
 			@Param("type") String instanceType,
 			Pageable pageable);
+	
+	public List<InstanceEntity> findAllByActiveAndName(
+			@Param("active") boolean active, 
+			@Param("name") String name,
+			Pageable pageable);
 }

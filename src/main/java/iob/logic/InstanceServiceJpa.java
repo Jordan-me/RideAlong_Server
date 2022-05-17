@@ -80,27 +80,23 @@ public class InstanceServiceJpa implements ExtendedInstancesService{
 		InstanceBoundary boundary = this.getSpecificInstance(instanceDomain, instanceId);
 
 		// Update instance details in DB
-		if (update.getInstanceId() != null) 
-			boundary.setInstanceId(update.getInstanceId());
-
 		if (update.getType() != null) 
 			boundary.setType(update.getType());
 
-		if (update.getName() != null) 
+		if (update.getName() != null) {
 			boundary.setName(update.getName());
-
-		if (update.getActive() != null) 
+		}
+		if (update.getActive() != null) {
 			boundary.setActive(update.getActive());
+		}
 
-		if (update.getCreatedBy() != null) 
-			//do nothing
-		if (update.getCreatedTimestamp() != null) 
-			// do nothing
-		if (update.getLocation() != null) 
-			boundary.setLocation(update.getLocation());
+		if (update.getLocation() != null) {
+			boundary.setLocation(update.getLocation());			
+		}
 		
-		if (update.getInstanceAttributes() != null) 
-			boundary.setInstanceAttributes(update.getInstanceAttributes());
+		if (update.getInstanceAttributes() != null) {
+			boundary.setInstanceAttributes(update.getInstanceAttributes());			
+		}
 		// update DB
 		InstanceEntity instanceEntity = this.instancesConverter.toEntity(boundary);
 		instanceEntity = this.instanceCrud.save(instanceEntity);
@@ -175,17 +171,31 @@ public class InstanceServiceJpa implements ExtendedInstancesService{
 		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.ADMIN,false)) {
 			throw new RuntimeException("Access denied");
 		}
-		List<InstanceEntity> instancesList = this.instanceCrud.findAllByName(name, PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId"));
 		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.PLAYER,false)) {
-			return instancesList
-					.stream()
-					.filter(o -> o.getActive())
-					.map(this.instancesConverter::toBoundary)
-					.collect(Collectors.toList());
+			return this.instanceCrud.findAllByActiveAndName(true, name,  PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId")
+					).stream()
+					.map(this.instancesConverter::toBoundary) // Stream<instancetoBoundary>
+					.collect(Collectors.toList()); // List<instancetoBoundary>;
 		}
-		
-		return instancesList.stream().map(this.instancesConverter::toBoundary)
-				.collect(Collectors.toList());
+		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.MANAGER,false)) {
+			return this.instanceCrud.findAllByName(name,  PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId")
+					).stream()
+					.map(this.instancesConverter::toBoundary) // Stream<instancetoBoundary>
+					.collect(Collectors.toList()); // List<instancetoBoundary>;
+			
+		}
+//		List<InstanceEntity> instancesList = this.instanceCrud.findAllByName(name, PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId"));
+//		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.PLAYER,false)) {
+//			return instancesList
+//					.stream()
+//					.filter(o -> o.getActive())
+//					.map(this.instancesConverter::toBoundary)
+//					.collect(Collectors.toList());
+//		}
+//		
+//		return instancesList.stream().map(this.instancesConverter::toBoundary)
+//				.collect(Collectors.toList());
+		return null;
 	}
 	
 	@Override

@@ -129,6 +129,28 @@ public class InstancesRepositoryTests {
     	assertThat(instances).isNotNull().hasSizeGreaterThanOrEqualTo(1);
     }    
     @Test
+    @DisplayName("Given Instance non active and active in db & Name = \"Eyal\""
+            + " when search Instance with player permission using MongoDB template"
+            + " retriev only active instance")
+    public void testFindInstanceByNameForPlayer() {
+    	int size = 10;
+    	
+        serviceTest.insertUser(this.mongoTemplate,new NewUserBoundary(ActivitiesRepositoryTests.PLAYER_MAIL, "Player", "PLAYER", "P"));
+
+    	InstanceBoundary instance = new InstanceBoundary(null, "User", "CheckForPlayer", true,null, new CreatedBy(
+    			new UserID(this.domainName, MANAGER_MAIL)), new Location(8.50, 2.6), null);
+    	InstanceBoundary instance2 = new InstanceBoundary(null, "User", "CheckForPlayer", false,null, new CreatedBy(
+    			new UserID(this.domainName, MANAGER_MAIL)), new Location(8.50, 2.6), null);
+    	serviceTest.insertInstance(this.mongoTemplate,instance);
+    	serviceTest.insertInstance(this.mongoTemplate,instance2);
+    	List<InstanceBoundary> instances = this.instancesService.getInstancesByName(this.domainName,ActivitiesRepositoryTests.PLAYER_MAIL,instance.getName(),size,0);
+    	for(InstanceBoundary in: instances) {
+    		System.out.println(in.toString());
+            assertThat(in.getName()).isEqualTo(instance.getName());
+    	}
+    	assertThat(instances).isNotNull().hasSize(1);
+    }  
+    @Test
     @DisplayName("Given Instance in db & Location = (lat,lng)"
             + " when search Instance using MongoDB template in radius "
             + " then Instances are found")

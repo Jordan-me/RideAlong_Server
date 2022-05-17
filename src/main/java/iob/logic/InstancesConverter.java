@@ -1,8 +1,5 @@
 package iob.logic;
 
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Component;
@@ -18,11 +15,9 @@ import iob.data.InstanceEntity;
 
 @Component
 public class InstancesConverter {
-	private ObjectMapper jackson;
-	
 	@PostConstruct
 	public void init() {
-		this.jackson = new ObjectMapper();
+		new ObjectMapper();
 	}
 	
 	public InstanceEntity toEntity(InstanceBoundary instance) {
@@ -37,22 +32,22 @@ public class InstancesConverter {
 		entity.setLng(instance.getLocation().getLng());
 		
 		if (instance.getInstanceAttributes() != null) {
-			entity.setInstanceAttributes(
-			  this.toEntity(
-					  instance.getInstanceAttributes()));
+			entity.setInstanceAttributes(instance.getInstanceAttributes());
+//			  this.toEntity(
+//					  instance.getInstanceAttributes()));
 		}
 		
 		return entity;
 	}
 	
-	public String toEntity (Map<String, Object> object) {
-		try {
-			return this.jackson
-				.writeValueAsString(object);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+//	public String toEntity (Map<String, Object> object) {
+//		try {
+//			return this.jackson
+//				.writeValueAsString(object);
+//		} catch (Exception e) {
+//			throw new RuntimeException(e);
+//		}
+//	}
 	public InstanceBoundary toBoundary(InstanceEntity entity) {
 		InstanceBoundary boundary = new InstanceBoundary();
 		
@@ -72,19 +67,19 @@ public class InstancesConverter {
 		boundary.setLocation(location);
 		
 		if (entity.getInstanceAttributes() != null) {
-			boundary.setInstanceAttributes(
-				this.toBoundaryFromJsonString(entity.getInstanceAttributes()));
+			boundary.setInstanceAttributes(entity.getInstanceAttributes());
+//				this.toBoundaryFromJsonString(entity.getInstanceAttributes()));
 		}
 
 		return boundary;
 	}
-	public Map<String, Object> toBoundaryFromJsonString (String json){
-		try {
-			return this.jackson
-				.readValue(json, Map.class);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+//	public Map<String, Object> toBoundaryFromJsonString (String json){
+//		try {
+//			return this.jackson
+//				.readValue(json, Map.class);
+//		} catch (Exception e) {
+//			throw new RuntimeException(e);
+//		}
+//	}
 
 }

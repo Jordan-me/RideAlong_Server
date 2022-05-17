@@ -146,7 +146,6 @@ public class InstancesController {
 			@RequestParam(name="userEmail", required = true) String userEmail,
 			@RequestBody InstanceBoundary instanceBoundary) throws InstanceNotFoundException {
 		// Get user data from DB and check if MANAGER
-//		this.manager.checkUserPermission((new UserID(userDomain, userEmail)).toString(), UserRole.MANAGER,true);
 		this.instancesService.updateInstance(new UserID(userDomain, userEmail),intanceDomain,instanceId,instanceBoundary);
 	}
 	 

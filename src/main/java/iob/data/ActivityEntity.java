@@ -1,6 +1,7 @@
 package iob.data;
 
 import java.util.Date;
+import java.util.Map;
 
 //import javax.persistence.Column;
 //import javax.persistence.Entity;
@@ -36,7 +37,7 @@ public class ActivityEntity {
 	private Date createdTimestamp;
 	@NonNull
 	private String createdBy;
-	private String activityAttributes;
+	private Map<String, Object> activityAttributes;
 	
 	public ActivityEntity() {
 	
@@ -84,11 +85,11 @@ public class ActivityEntity {
 		this.createdBy = createdBy;
 	}
 	@Field(name="ACTIVITY_ATTRIBUTES")
-	public String getActivityAttributes() {
+	public Map<String, Object> getActivityAttributes() {
 		return activityAttributes;
 	}
 
-	public void setActivityAttributes(String activityAttributes) {
-		this.activityAttributes = activityAttributes;
+	public void setActivityAttributes(Map<String, Object> map) {
+		this.activityAttributes = map;
 	}	
 }

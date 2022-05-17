@@ -8,6 +8,7 @@ import java.util.Date;
 //import javax.persistence.Temporal;
 //import javax.persistence.TemporalType;
 //import javax.validation.constraints.NotBlank;
+import java.util.Map;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -41,7 +42,7 @@ public class InstanceEntity {
 	private String createdBy;
 	private double lat;
 	private double lng;
-	private String instanceAttributes;
+	private Map<String, Object> instanceAttributes;
 	
 	public InstanceEntity() {
 	}
@@ -119,13 +120,13 @@ public class InstanceEntity {
 	}
 	
 	@Field(name="INSTANCE_ATTRIBUTES")
-	public String getInstanceAttributes() {
+	public Map<String, Object> getInstanceAttributes() {
 		return instanceAttributes;
 	}
 
 
-	public void setInstanceAttributes(String instanceAttributes) {
-		this.instanceAttributes = instanceAttributes;
+	public void setInstanceAttributes(Map<String, Object> map) {
+		this.instanceAttributes = map;
 	}
 
 	@Override
