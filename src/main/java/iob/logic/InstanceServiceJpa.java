@@ -238,23 +238,6 @@ public class InstanceServiceJpa implements ExtendedInstancesService{
 				.stream()
 				.map(this.instancesConverter::toBoundary)
 				.collect(Collectors.toList());
-				
-		
-//		
-//		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.PLAYER,false)) {
-//			 return this.instanceCrud
-//				.findAll(PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId"))
-//				.stream().filter(o -> o.getActive()).
-//				filter(o -> (new Location(o.getLat(),o.getLng())).isInRange(location, distance))
-//				.map(this.instancesConverter::toBoundary)
-//				.collect(Collectors.toList());
-//		}
-//		 return this.instanceCrud
-//			.findAll(PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId"))
-//			.stream()
-//			.filter(o -> (new Location(o.getLat(),o.getLng())).isInRange(location, distance))
-//			.map(this.instancesConverter::toBoundary)
-//			.collect(Collectors.toList());
 	}
 	@Override
 	public void deleteAllInstances() {
