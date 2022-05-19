@@ -50,6 +50,7 @@ public class InstanceServiceJpa implements ExtendedInstancesService{
 	}
 
 	@Override
+	@LogThisMethod
 	public InstanceBoundary createInstance(InstanceBoundary instance) {
 		InstanceId id = new InstanceId(this.domainName,UUID.randomUUID().toString());
 		instance.setInstanceId(id);
