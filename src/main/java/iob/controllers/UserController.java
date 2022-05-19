@@ -74,6 +74,7 @@ public class UserController {
 	}
 	
 	// Update user details
+	@CrossOrigin(origins = "http://localhost:3000")
 	@RequestMapping(
 			path = "/iob/users/{userDomain}/{userEmail}",
 			method = RequestMethod.PUT,
