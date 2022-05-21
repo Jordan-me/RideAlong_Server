@@ -19,6 +19,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import iob.boundries.CreatedBy;
 import iob.boundries.InstanceBoundary;
 import iob.boundries.InstanceId;
 import iob.boundries.Location;
@@ -216,6 +217,12 @@ public class InstanceServiceJpa implements ExtendedInstancesService{
 		return null;
 
 	}
+	public Circle getCircle(Location location, double distance) {
+		Point basePoint = new Point(location.getLat(),location.getLng());
+		Distance radius = new Distance(distance,Metrics.MILES);
+		Circle area = new Circle(basePoint,radius);
+		return area;
+	}
 	
 	@Override
 	public List<InstanceBoundary> getInstancesByLocation(String userDomain, String userEmail, Location location,
@@ -224,16 +231,12 @@ public class InstanceServiceJpa implements ExtendedInstancesService{
 			throw new RuntimeException("Access denied");
 		}
 
-		Point basePoint = new Point(location.getLat(),location.getLng());
-		Distance radius = new Distance(distance,Metrics.MILES);
-		Circle area = new Circle(basePoint,radius);
-		
 		Query query = new Query();
-		query.addCriteria(Criteria.where("location").within(area));
+		query.addCriteria(Criteria.where("location").within(getCircle(location,distance)));
 		
 		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail)
 				.toString(), UserRole.PLAYER,false)) {
-			query.addCriteria(Criteria.where("active").is(false));
+			query.addCriteria(Criteria.where("active").is(true));
 		}
 		return this.mongoOperations.find(query,InstanceEntity.class)
 				.stream()
@@ -249,6 +252,27 @@ public class InstanceServiceJpa implements ExtendedInstancesService{
 	public void deleteAllInstances(UserID userId, UserRole role) {
 		this.usersService.checkUserPermission(userId.toString(), role,true);	
 		this.instanceCrud.deleteAll();
+	}
+	@Override
+	public List<InstanceBoundary> getInstancesByTypeAndLocationAndNotCreatedBy(String userDomain, String userEmail,
+			Location location,double distance,String instanceType, CreatedBy creator, int size, int page) {
+		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.ADMIN,false)) {
+			throw new RuntimeException("Access denied");
+		}
+		
+		Query query = new Query();
+		query.addCriteria(Criteria.where("location").within(getCircle(location,distance)));
+		query.addCriteria(Criteria.where("type").is(instanceType));
+		query.addCriteria(Criteria.where("createdBy").ne(creator));
+		if(this.usersService.checkUserPermission(new UserID(userDomain, userEmail)
+				.toString(), UserRole.PLAYER,false)) {
+			query.addCriteria(Criteria.where("active").is(true));
+		}
+		
+		return this.mongoOperations.find(query,InstanceEntity.class)
+				.stream()
+				.map(this.instancesConverter::toBoundary)
+				.collect(Collectors.toList());
 	}
 
 

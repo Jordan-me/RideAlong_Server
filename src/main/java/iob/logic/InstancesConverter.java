@@ -27,28 +27,18 @@ public class InstancesConverter {
 		entity.setName(instance.getName());
 		entity.setActive((boolean)instance.getActive());
 		entity.setCreatedTimestamp(instance.getCreatedTimestamp());
-		entity.setCreatedBy(instance.getCreatedBy().toString());
+		entity.setCreatedBy(instance.getCreatedBy());
 		entity.setLocation(instance.getLocation());
-//		entity.setLat(instance.getLocation().getLat());
-//		entity.setLng(instance.getLocation().getLng());
-		
+
 		if (instance.getInstanceAttributes() != null) {
 			entity.setInstanceAttributes(instance.getInstanceAttributes());
-//			  this.toEntity(
-//					  instance.getInstanceAttributes()));
+
 		}
 		
 		return entity;
 	}
 	
-//	public String toEntity (Map<String, Object> object) {
-//		try {
-//			return this.jackson
-//				.writeValueAsString(object);
-//		} catch (Exception e) {
-//			throw new RuntimeException(e);
-//		}
-//	}
+
 	public InstanceBoundary toBoundary(InstanceEntity entity) {
 		InstanceBoundary boundary = new InstanceBoundary();
 		
@@ -60,27 +50,18 @@ public class InstancesConverter {
 		boundary.setActive(entity.getActive());
 		boundary.setCreatedTimestamp(entity.getCreatedTimestamp());
 		
-		String[] splittedCreatedBy = entity.getCreatedBy().split("_");
-		CreatedBy createdBy = new CreatedBy(new UserID(splittedCreatedBy[0], splittedCreatedBy[1]));
-		boundary.setCreatedBy(createdBy);
+//		String[] splittedCreatedBy = entity.getCreatedBy().split("_");
+//		CreatedBy createdBy = new CreatedBy(new UserID(splittedCreatedBy[0], splittedCreatedBy[1]));
+		boundary.setCreatedBy(entity.getCreatedBy());
 		
-//		Location location = new Location(entity.getLat(),entity.getLng());
 		boundary.setLocation(entity.getLocation());
 		
 		if (entity.getInstanceAttributes() != null) {
 			boundary.setInstanceAttributes(entity.getInstanceAttributes());
-//				this.toBoundaryFromJsonString(entity.getInstanceAttributes()));
 		}
 
 		return boundary;
 	}
-//	public Map<String, Object> toBoundaryFromJsonString (String json){
-//		try {
-//			return this.jackson
-//				.readValue(json, Map.class);
-//		} catch (Exception e) {
-//			throw new RuntimeException(e);
-//		}
-//	}
+
 
 }

@@ -54,8 +54,12 @@ public class ServiceTest {
 		mongoTemplate.save(savedInstance, "Instances");
 		return savedInstance;
     }
-    public ActivityEntity insertActivity(MongoTemplate mongoTemplate, ActivityBoundary activityBoundary) throws InstanceNotFoundException {
-    	activityBoundary = this.activityController.createActivity(activityBoundary);
+    public Object insertActivity(MongoTemplate mongoTemplate, ActivityBoundary activityBoundary) throws InstanceNotFoundException {
+    	if(activityBoundary.getType() == "fetchSuggestedEvents") {
+    		InstanceBoundary[] instances = (InstanceBoundary[]) this.activityController.createActivity(activityBoundary);
+    		return instances;
+    	}
+    	activityBoundary = (ActivityBoundary)this.activityController.createActivity(activityBoundary);
 		ActivityEntity savedActivity= this.activityConverter.toEntity(activityBoundary);
 		mongoTemplate.save(savedActivity, "Activities");
 		return savedActivity;

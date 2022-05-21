@@ -28,8 +28,8 @@ public class ActivitiesController {
 			method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ActivityBoundary createActivity (@RequestBody ActivityBoundary boundary) throws InstanceNotFoundException {
+	public Object createActivity (@RequestBody ActivityBoundary boundary) throws InstanceNotFoundException {
 
-		return (ActivityBoundary) this.activitiesService.invokeActivity(boundary);
+		return this.activitiesService.invokeActivity(boundary);
 	}
 }

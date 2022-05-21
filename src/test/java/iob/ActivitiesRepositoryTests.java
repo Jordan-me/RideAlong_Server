@@ -3,6 +3,10 @@ package iob;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,14 +27,19 @@ import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.runtime.Network;
 import iob.boundries.ActivityBoundary;
+import iob.boundries.ActivityId;
 import iob.boundries.CreatedBy;
 import iob.boundries.Instance;
 import iob.boundries.InstanceBoundary;
 import iob.boundries.InstanceId;
 import iob.boundries.Location;
 import iob.boundries.NewUserBoundary;
+import iob.boundries.UserBoundary;
 import iob.boundries.UserID;
+import iob.controllers.UserController;
+import iob.data.ActivityEntity;
 import iob.data.InstanceEntity;
+import iob.data.UserEntity;
 import iob.logic.InstanceNotFoundException;
 
 /*Tests: PostActivity*/
@@ -40,6 +49,8 @@ public class ActivitiesRepositoryTests {
 	private static final String CONNECTION_STRING = "mongodb+srv://mongo:Fgj0JwGGgd7Kubo1@integrativeproject-ride.fdmvs.mongodb.net/";
 	private String domainName;
 	public final static String PLAYER_MAIL = "player@google.com";
+	@Autowired
+	private UserController userController;
 	
 	@Value("${spring.application.name}")
 	public void setDomainName(String domainName) {
@@ -90,7 +101,8 @@ public class ActivitiesRepositoryTests {
     	ActivityBoundary activity = new ActivityBoundary(null, "FindPartner",new Instance(serviceTest.getInstanceId(in)), null,
      			new CreatedBy(new UserID(this.domainName, ActivitiesRepositoryTests.PLAYER_MAIL)), null);
     	// Then it saved successfully
-    	testInsertActivity(serviceTest.getActivity(serviceTest.insertActivity(this.mongoTemplate, activity)),activity);
+    	ActivityBoundary activityb = serviceTest.getActivity((ActivityEntity) serviceTest.insertActivity(this.mongoTemplate, activity));
+    	testInsertActivity(activityb,activity);
     }
 
 	private void testInsertActivity(ActivityBoundary activityBoundary, ActivityBoundary activity) {
@@ -117,4 +129,52 @@ public class ActivitiesRepositoryTests {
     	// Then throw an error
     	assertThrows(Exception.class,()->serviceTest.insertActivity(this.mongoTemplate, activity));
     }
+    
+    @Test
+    @DisplayName("Given FetchSuggestedEvents activity to run"
+            + " when run activity using MongoDB template"
+            + " then activity is return instances from mongoDB ")
+    public void testPostFetchSuggestedEventsActivityHappyFlow() throws InstanceNotFoundException {
+    	//Given activity to save
+    	UserEntity userEntity = serviceTest.insertUser(this.mongoTemplate,new NewUserBoundary("ya@gmail.com", "MANAGER", "MANAGER", "z"));
+    	serviceTest.insertUser(this.mongoTemplate,new NewUserBoundary(ActivitiesRepositoryTests.PLAYER_MAIL, "MANAGER", "MANAGER", "P"));
+
+    	InstanceBoundary instance = new InstanceBoundary(null, "User", "ya@gmail.com", true,null, new CreatedBy(
+    			new UserID(this.domainName, "ya@gmail.com")), new Location(10.50, 20.6), null);
+    	InstanceBoundary instance2 = new InstanceBoundary(null, "User", ActivitiesRepositoryTests.PLAYER_MAIL, true,null, new CreatedBy(
+    			new UserID(this.domainName,ActivitiesRepositoryTests.PLAYER_MAIL)), new Location(10.50, 20.6), null);
+    	
+    	InstanceBoundary instanceEvent = new InstanceBoundary(null, "userEvent", "flying to miami babyh", true,null, new CreatedBy(
+    			new UserID(this.domainName, "ya@gmail.com")), new Location(10.50, 20.6), null);
+    	InstanceBoundary instanceEvent2 = new InstanceBoundary(null, "userEvent", "summer vacation", true,null, new CreatedBy(
+    			new UserID(this.domainName, ActivitiesRepositoryTests.PLAYER_MAIL)), new Location(10.50, 20.6), null);
+    	
+    	serviceTest.insertInstance(this.mongoTemplate,instance);
+    	serviceTest.insertInstance(this.mongoTemplate,instance2);
+    	serviceTest.insertInstance(this.mongoTemplate,instanceEvent);
+    	serviceTest.insertInstance(this.mongoTemplate,instanceEvent2);
+
+    	UserBoundary userBoundary =  serviceTest.getUser(userEntity);
+    	userBoundary.setRole("Player");
+    	this.userController.updateUser(this.domainName, 
+    			"ya@gmail.com",userBoundary);
+ 
+    	// When create an activity
+    	Map<String, Object> params =  new HashMap<>();
+    	 // Adding key-value pairs to a HashMap
+    	params.put("instanceType", "userEvent");
+    	params.put("distance", 20.0);
+    	params.put("size", 3);
+    	params.put("page", 0);
+
+    	ActivityBoundary activity = new ActivityBoundary(null, 
+    			"fetchSuggestedEvents",new Instance(instance.getInstanceId()), null,
+     			new CreatedBy(new UserID(this.domainName, "ya@gmail.com")), params);
+    	// Then it saved successfully
+    	InstanceBoundary [] instances = (InstanceBoundary[]) serviceTest.insertActivity(this.mongoTemplate, activity);
+    	assertThat(instances).isNotNull().hasSize(1);
+    }
+
+
+	
 }

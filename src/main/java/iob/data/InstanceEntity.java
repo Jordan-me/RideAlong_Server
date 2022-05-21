@@ -10,11 +10,13 @@ import java.util.Date;
 //import javax.validation.constraints.NotBlank;
 import java.util.Map;
 
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import com.mongodb.lang.NonNull;
 
+import iob.boundries.CreatedBy;
 import iob.boundries.Location;
 
 import org.springframework.data.annotation.Id;
@@ -41,10 +43,8 @@ public class InstanceEntity {
 	private boolean active;
 	private Date createdTimestamp;
 	@NonNull
-	private String createdBy;
-	private Location location;
-//	private double lat;
-//	private double lng;
+	private CreatedBy createdBy;
+	private @GeoSpatialIndexed Location location;
 	private Map<String, Object> instanceAttributes;
 	
 	public InstanceEntity() {
@@ -104,31 +104,12 @@ public class InstanceEntity {
 		this.location = location;
 	}
 	
-//	@Field(name="LOCATION_lat")
-//	public double getLat() {
-//		return lat;
-//	}
-//	
-//	
-//	public void setLat(double lat) {
-//		this.lat = lat;
-//	}
-//	@Field(name="LOCATION_lng")
-//	public double getLng() {
-//		return lng;
-//	}
-//	
-//	
-//	public void setLng(double lng) {
-//		this.lng = lng;
-//	}
-	
 	@Field(name="CREATED_BY")
-	public String getCreatedBy() {
+	public CreatedBy getCreatedBy() {
 		return createdBy;
 	}
 	
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(CreatedBy createdBy) {
 		this.createdBy = createdBy;
 	}
 	

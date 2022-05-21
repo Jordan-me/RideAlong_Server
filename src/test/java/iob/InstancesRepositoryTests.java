@@ -85,7 +85,7 @@ public class InstancesRepositoryTests {
     	// Then it saved successfully
         assertThat(savedInstance.getInstanceId().toString()).isEqualTo(instance.getInstanceId().toString());
         assertThat(savedInstance.getActive()).isEqualTo(instance.getActive());
-        assertThat(savedInstance.getCreatedBy()).isEqualTo(instance.getCreatedBy().toString());
+        assertThat(savedInstance.getCreatedBy()).isEqualTo(instance.getCreatedBy());
         assertThat(savedInstance.getCreatedTimestamp()).isEqualTo(instance.getCreatedTimestamp());
         assertThat(savedInstance.getInstanceAttributes()).isEqualTo(instance.getInstanceAttributes());
         assertThat(savedInstance.getLocation()).isEqualTo(instance.getLocation());

@@ -22,7 +22,9 @@ VARCHAR(255)	| VARCHAR(255)	|	VARCHAR(255) |VARCHAR(255)       |???		 | ???
  */
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import com.mongodb.lang.NonNull;  
+import com.mongodb.lang.NonNull;
+
+import iob.boundries.CreatedBy;  
 
 @Document(collection = "Activities")
 //@Entity
@@ -36,7 +38,7 @@ public class ActivityEntity {
 	private String instance;
 	private Date createdTimestamp;
 	@NonNull
-	private String createdBy;
+	private CreatedBy createdBy;
 	private Map<String, Object> activityAttributes;
 	
 	public ActivityEntity() {
@@ -77,11 +79,11 @@ public class ActivityEntity {
 		this.createdTimestamp = createdTimestamp;
 	}
 	@Field(name="CREATED_BY")
-	public String getCreatedBy() {
+	public CreatedBy getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(CreatedBy createdBy) {
 		this.createdBy = createdBy;
 	}
 	@Field(name="ACTIVITY_ATTRIBUTES")
