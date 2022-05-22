@@ -219,7 +219,7 @@ public class InstanceServiceJpa implements ExtendedInstancesService{
 	}
 	public Circle getCircle(Location location, double distance) {
 		Point basePoint = new Point(location.getLat(),location.getLng());
-		Distance radius = new Distance(distance,Metrics.MILES);
+		Distance radius = new Distance(distance,Metrics.KILOMETERS);
 		Circle area = new Circle(basePoint,radius);
 		return area;
 	}

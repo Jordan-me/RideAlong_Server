@@ -79,7 +79,7 @@ public class ActivitySrviceJpa implements ExtendedActivitiesService {
 				throw new RuntimeException("insert required parameters is not defined");
 			}
 			if (activity.getActivityAttributes().containsKey("distance")) {
-				distance = (double) activity.getActivityAttributes().get("distance");
+				distance = Double.parseDouble(activity.getActivityAttributes().get("distance").toString());
 			}
 			if (activity.getActivityAttributes().containsKey("size")) {
 				size = (int) activity.getActivityAttributes().get("size");
