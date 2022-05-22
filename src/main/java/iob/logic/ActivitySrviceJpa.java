@@ -51,7 +51,7 @@ public class ActivitySrviceJpa implements ExtendedActivitiesService {
 		this.instancesService = instancesService;
 		this.instancesConverter = instancesConverter;
 	}
-
+ 
 	@Override
 	public Object invokeActivity(ActivityBoundary activity) throws InstanceNotFoundException {
 		String userId = activity.getInvokedBy().getUserId().toString();
