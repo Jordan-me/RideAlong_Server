@@ -54,35 +54,24 @@ public class ActivitySrviceJpa implements ExtendedActivitiesService {
 
 	@Override
 	public Object invokeActivity(ActivityBoundary activity) throws InstanceNotFoundException {
-		System.err.println("insert invokeActivity");
 		String userId = activity.getInvokedBy().getUserId().toString();
-		System.err.println("getedInvokedBy");
 		// Get user data from DB and check if PLAYER
 		this.usersService.checkUserPermission(userId, UserRole.PLAYER, true);
-		System.err.println("checkedUserPermission");
 		// Get user inctance from DB and check if active
 		String instanceId = activity.getInstance().getInstanceId().toString();
-		System.err.println("gettedInstance");
 		InstanceEntity instanceEntity = this.instancesCrud.findById(instanceId)
 				.orElseThrow(() -> new RuntimeException("Could not find instance with id: " + instanceId));
-		System.err.println("gettedInstanceEntity");
 
 		if (instanceEntity.getActive() == false)
 			throw new InstanceNotFoundException("Instance is not active");
-		System.err.println("gettedInstancegetActive");
 		// user is player and instance is active
 		activity.setActivityId(new ActivityId(this.domainName, UUID.randomUUID().toString()));
-		System.err.println("setActivityId");
 		activity.setCreatedTimestamp(new Date());
-		System.err.println("setCreatedTimestamp");
 		if (activity.getType() == null || activity.getType().isEmpty()) {
 			throw new RuntimeException("Type is not defined");
 		}
-		System.err.println("getedType");
-		System.err.println("switch");
 		switch (activity.getType()) {
 		case "fetchSuggestedEvents":
-			System.err.println("insert fetchSuggestedEvents case");
 			double distance = 20.0;
 			int size = 20;
 			int page = 0;
