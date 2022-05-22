@@ -10,7 +10,9 @@ import java.util.Date;
 //import javax.validation.constraints.NotBlank;
 import java.util.Map;
 
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -35,16 +37,13 @@ VARCHAR(255)	| VARCHAR(255)	|	VARCHAR(255) |VARCHAR(255)		|VARCHAR(255)        |
 public class InstanceEntity {
 	@Id
 	private String instanceId;
-	@NonNull
 	private String type;
-	@NonNull
-	private String name;
-	@NonNull
-	private boolean active;
-	private Date createdTimestamp;
-	@NonNull
-	private CreatedBy createdBy;
-	private @GeoSpatialIndexed Location location;
+	private @Indexed String name;
+	private @Indexed boolean active;
+	private @Indexed Date createdTimestamp;
+	private @Indexed CreatedBy createdBy;
+	
+	private @GeoSpatialIndexed(type=GeoSpatialIndexType.GEO_2D) double [] location;
 	private Map<String, Object> instanceAttributes;
 	
 	public InstanceEntity() {
@@ -94,13 +93,14 @@ public class InstanceEntity {
 	public void setCreatedTimestamp(Date createdTimestamp) {
 		this.createdTimestamp = createdTimestamp;
 	}
+	
 	@Field(name="LOCATION")
-	public Location getLocation() {
+	public double[] getLocation() {
 		return location;
 	}
 	
 	
-	public void setLocation(Location location) {
+	public void setLocation(double[] location) {
 		this.location = location;
 	}
 	
@@ -127,7 +127,7 @@ public class InstanceEntity {
 	public String toString() {
 		return "InstanceEntity [instanceId=" + instanceId + ", type=" + type + ", name=" + name + ", active=" + active
 				+ ", createdTimestamp=" + createdTimestamp + ", createdBy=" + createdBy +
-				", location=("+location.getLat()+ ", " +location.getLng()+ ")"
+				", location=("+location[0]+ ", " +location[1]+ ")"
 				+ ", instanceAttributes=" + instanceAttributes + "]";
 	}
 

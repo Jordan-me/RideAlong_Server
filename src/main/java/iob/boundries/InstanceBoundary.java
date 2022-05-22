@@ -3,6 +3,9 @@ package iob.boundries;
 import java.util.Date;
 import java.util.Map;
 
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
+
 public class InstanceBoundary {
 	private InstanceId instanceId;
 	private String type;

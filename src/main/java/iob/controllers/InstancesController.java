@@ -10,6 +10,8 @@ package iob.controllers;
 //import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -117,6 +119,7 @@ public class InstancesController {
 				@RequestParam(name="userEmail", required = true) String userEmail,
 				@RequestParam(name="size", required = false, defaultValue = "10") int size,
 				@RequestParam(name="page", required = false, defaultValue = "0") int page) throws InstanceNotFoundException {
+	
 		Location location = new Location(lat,lng);
 		InstanceBoundary[] instances = this.instancesService.getInstancesByLocation(userDomain,userEmail,
 				location,distance,size, page).toArray(new InstanceBoundary[0]);
