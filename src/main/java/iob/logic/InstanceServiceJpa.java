@@ -239,7 +239,7 @@ public class InstanceServiceJpa implements ExtendedInstancesService {
 
 	public Circle getCircle(Location location, double distance) {
 		Point basePoint = new Point(location.getLat(), location.getLng());
-		Distance radius = new Distance(distance, Metrics.KILOMETERS);
+		Distance radius = new Distance(distance, Metrics.NEUTRAL);
 		Circle area = new Circle(basePoint, radius);
 		return area;
 	}
@@ -252,27 +252,17 @@ public class InstanceServiceJpa implements ExtendedInstancesService {
 			throw new RuntimeException("Access denied");
 		}
 
-//		Query query = new Query();
-//		query.addCriteria(Criteria.where("location").within(getCircle(location, distance)));
+		Query query = new Query();
+		query.addCriteria(Criteria.where("location").within(getCircle(location, distance)));
 
-		double[] loc = {location.getLng(),location.getLat()};
 		if (this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.PLAYER,
 				false)) {
-//			query.addCriteria(Criteria.where("active").is(true));
-			return this.instanceCrud
-					.findAllNearAndActive(loc,distance,true,
-							PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId"))
-					.stream().map(this.instancesConverter::toBoundary) // Stream<instancetoBoundary>
-					.collect(Collectors.toList()); // List<instancetoBoundary>;
+			query.addCriteria(Criteria.where("active").is(true));
+
 		}
-//		return this.mongoOperations.find(query, InstanceEntity.class).stream().map(this.instancesConverter::toBoundary)
-//				.collect(Collectors.toList());
-		
-		return this.instanceCrud
-				.findAllNear(loc,distance,
-						PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId"))
-				.stream().map(this.instancesConverter::toBoundary) // Stream<instancetoBoundary>
-				.collect(Collectors.toList()); // List<instancetoBoundary>;
+		return this.mongoOperations.find(query, InstanceEntity.class).stream().map(this.instancesConverter::toBoundary)
+				.collect(Collectors.toList());
+
 	}
 
 	@Override
@@ -289,43 +279,24 @@ public class InstanceServiceJpa implements ExtendedInstancesService {
 
 	@Override
 	public List<InstanceBoundary> getInstancesByTypeAndLocationAndNotCreatedBy(String userDomain, String userEmail,
-			double [] location, double distance, String instanceType, CreatedBy creator, int size, int page) {
+			Location location, double distance, String instanceType, CreatedBy creator, int size, int page) {
 		if (this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.ADMIN,
 				false)) {
 			throw new RuntimeException("Access denied");
 		}
-//		Document queryFilter  = new Document("type", "perennial");
-//		mongoCollection.findOne(queryFilter).getAsync(task -> {
-//		    if (task.isSuccess()) {
-//		        Plant result = task.get();
-//		        Log.v("EXAMPLE", "successfully found a document: " + result);
-//		    } else {
-//		        Log.e("EXAMPLE", "failed to find document with: ", task.getError());
-//		    }
-//		});
-//		Query query = new Query();
-//		query.addCriteria(Criteria.where("location").within(getCircle(location, distance)));
-//		query.addCriteria(Criteria.where("type").is(instanceType));
-//		query.addCriteria(Criteria.where("createdBy").ne(creator));
+
+		Query query = new Query();
+		query.addCriteria(Criteria.where("location").within(getCircle(location, distance)));
+		query.addCriteria(Criteria.where("type").is(instanceType));
+		query.addCriteria(Criteria.where("createdBy").ne(creator));
 		if (this.usersService.checkUserPermission(new UserID(userDomain, userEmail).toString(), UserRole.PLAYER,
 				false)) {
-//			query.addCriteria(Criteria.where("active").is(true));
-			System.err.println("306. getInstancesByTypeAndLocationAndNotCreatedBy");
-			return this.instanceCrud
-					.findAllByLocationNearAndTypeAndNotCreatedByAndActive(location,distance,instanceType,
-							creator,true,
-							PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId"))
-					.stream().map(this.instancesConverter::toBoundary) // Stream<instancetoBoundary>
-					.collect(Collectors.toList()); // List<instancetoBoundary>;
+			query.addCriteria(Criteria.where("active").is(true));
+
 		}
-		return this.instanceCrud
-				.findAllByLocationNearAndTypeAndNotCreatedBy(location,distance,instanceType,
-						creator,
-						PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "instanceId"))
-				.stream().map(this.instancesConverter::toBoundary) // Stream<instancetoBoundary>
-				.collect(Collectors.toList()); // List<instancetoBoundary>;
-//		return this.mongoOperations.find(query, InstanceEntity.class).stream().map(this.instancesConverter::toBoundary)
-//				.collect(Collectors.toList());
+
+		return this.mongoOperations.find(query, InstanceEntity.class).stream().map(this.instancesConverter::toBoundary)
+				.collect(Collectors.toList());
 	}
 
 }

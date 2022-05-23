@@ -4,11 +4,9 @@ import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.util.Streamable;
 
 import iob.boundries.CreatedBy;
 import iob.boundries.Location;
@@ -37,30 +35,28 @@ public interface InstanceCrud extends MongoRepository<InstanceEntity, String>{
 			@Param("type") String instanceType,
 			PageRequest pageable);
 
-	@Query("{location: { $near: {$geometry : {type: 'point', coordinates :?0}, $maxDistance: ?1}}, active: ?2}")
-	public List<InstanceEntity> findAllNearAndActive(
-			double [] location, 
-			double radius,
-			boolean active,
-			PageRequest pageable);
-	
-	@Query("{location: { $near: {$geometry : {type: 'point', coordinates :?0}, $maxDistance: ?1}}}")
-	public List<InstanceEntity> findAllNear(
-			double[]  location, 
-			double radius,
-			PageRequest pageable);
-
-	@Query("{location: { $near: ?0, $maxDistance: ?1}, type: ?2, createdBy: {$ne: ?3},active: ?4}")
-	public List<InstanceEntity> findAllByLocationNearAndTypeAndNotCreatedByAndActive(
-			double[]  location,double radius,String instanceType,
-			CreatedBy creator,boolean active,
-			PageRequest pageable);
-	
-	@Query("{location: { $near: ?0, $maxDistance: ?1}, type: ?2, createdBy: {$ne:?3}}")
-	public List<InstanceEntity> findAllByLocationNearAndTypeAndNotCreatedBy(
-			double[] location,double radius,String instanceType,
-			CreatedBy creator,
-			PageRequest pageable);
+//	@Query("{LOCATION: { $near: ['lat':?0,'lng':?0], $maxDistance: ?1}, ACTIVE: ?2}")
+//	public List<InstanceEntity> findByLocationNearAndActive(
+//			Location location, double distance,
+//			boolean active,
+//			PageRequest pageable);
+//	
+//	@Query("{LOCATION: { $near: ['lat':?0,'lng':?0], $maxDistance: ?1}}")
+//	public List<InstanceEntity> findAllByLocationNear(
+//			Location location,double distance,
+//			PageRequest pageable);
+//
+//	@Query("{LOCATION: { $near: ?0, $maxDistance: ?1}, type: ?2, createdBy: {$ne: ?3},active: ?4}")
+//	public List<InstanceEntity> findAllByLocationNearAndTypeAndNotCreatedByAndActive(
+//			Location  location,double radius,String instanceType,
+//			CreatedBy creator,boolean active,
+//			PageRequest pageable);
+//	
+//	@Query("{location: { $near: ?0, $maxDistance: ?1}, type: ?2, createdBy: {$ne:?3}}")
+//	public List<InstanceEntity> findAllByLocationNearAndTypeAndNotCreatedBy(
+//			Location location,double radius,String instanceType,
+//			CreatedBy creator,
+//			PageRequest pageable);
 	
 
 }

@@ -43,7 +43,7 @@ public class InstanceEntity {
 	private @Indexed Date createdTimestamp;
 	private @Indexed CreatedBy createdBy;
 	
-	private @GeoSpatialIndexed(type=GeoSpatialIndexType.GEO_2D) double [] location;
+	private @GeoSpatialIndexed Location location ;
 	private Map<String, Object> instanceAttributes;
 	
 	public InstanceEntity() {
@@ -95,12 +95,12 @@ public class InstanceEntity {
 	}
 	
 	@Field(name="LOCATION")
-	public double[] getLocation() {
+	public Location getLocation() {
 		return location;
 	}
 	
 	
-	public void setLocation(double[] location) {
+	public void setLocation(Location location) {
 		this.location = location;
 	}
 	
@@ -127,7 +127,7 @@ public class InstanceEntity {
 	public String toString() {
 		return "InstanceEntity [instanceId=" + instanceId + ", type=" + type + ", name=" + name + ", active=" + active
 				+ ", createdTimestamp=" + createdTimestamp + ", createdBy=" + createdBy +
-				", location=("+location[0]+ ", " +location[1]+ ")"
+				", location=("+location.getLat()+ ", " +location.getLng()+ ")"
 				+ ", instanceAttributes=" + instanceAttributes + "]";
 	}
 

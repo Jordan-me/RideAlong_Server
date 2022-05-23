@@ -25,7 +25,7 @@ public interface ExtendedInstancesService extends InstancesService{
 			int page);
 	
 	public List<InstanceBoundary> getInstancesByTypeAndLocationAndNotCreatedBy(String userDomain, String userEmail,
-			double[] ds,double distance,
+			Location ds,double distance,
 			String instanceType,
 			CreatedBy creator,
 			int size,
